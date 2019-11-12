@@ -5,6 +5,8 @@
  */
 package log;
 
+import core.DefaultSettings;
+import core.Main;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -19,7 +21,71 @@ public class SaveResults {
     public static DecimalFormat dft = new DecimalFormat("#.##");
     
     public static void PrintToConsole(){
+        // monitor
+        Log.printLine1("Monitoring Metrics: ");
+        ArrayList<MonitorHistory> monitorHistory = Main.getMonitor().getMonitorHistory();
+        double[] cpuUtil = new double[monitorHistory.size()];
+        double[] responseTime = new double[monitorHistory.size()];
+        int maxRunningVms = 0;
         
+        for (int i=0; i < monitorHistory.size(); i++){
+            cpuUtil[i] = monitorHistory.get(i).getCpuUtilizationAvg();
+            responseTime[i] = monitorHistory.get(i).getResponseTimeAvg();
+            if (monitorHistory.get(i).getVms() > maxRunningVms)
+                maxRunningVms = monitorHistory.get(i).getVms();
+        }
+        DescriptiveStatistics.analyze(cpuUtil, "Cpu Utilization");
+        DescriptiveStatistics.analyze(responseTime, "Response Time");
+        Log.printLine2("Max Running Vms: " + maxRunningVms);
+        
+        //analyze
+        Log.printLine1("Analyzing Metrics: ");
+        ArrayList<AnalyzerHistory> analyzerHistory = Main.getAnalyzer().getHistoryList();
+        double[] cpuUtilAnalyzed = new double[analyzerHistory.size()];
+        double[] responseTimeAnalyzed = new double[analyzerHistory.size()];
+        
+        for (int i = 0; i < analyzerHistory.size(); i ++){
+            cpuUtilAnalyzed[i] = analyzerHistory.get(i).getCpuUtilization();
+            responseTimeAnalyzed[i] = analyzerHistory.get(i).getResponseTime();
+        }
+        
+        DescriptiveStatistics.analyze(cpuUtilAnalyzed, "Analyzed Cpu Utilization");
+        DescriptiveStatistics.analyze(responseTimeAnalyzed, "Analyzed Response Time");
+        
+        // planner
+        Log.printLine1("Planning Metrics: ");
+        ArrayList<PlannerHistory> plannerHistory = Main.getPlanner().getHistoryList();
+        int sumScaleUpDecision = 0;
+        int sumScaleDownDecision = 0;
+        for (PlannerHistory history : plannerHistory){
+            if (history.getDecision() == DefaultSettings.PlannerDecision.SCALE_UP)
+                sumScaleUpDecision++;
+            else if (history.getDecision() == DefaultSettings.PlannerDecision.SCALE_DOWN)
+                sumScaleDownDecision++;
+        }
+        
+        Log.printLine2("Sum scale up decisions: " + sumScaleUpDecision);
+        Log.printLine2("Sum scale down decisions: " + sumScaleDownDecision);
+        
+        // Executor
+        Log.printLine1("Executing Metrics: ");
+        ArrayList<ExecutorHistory> executorHistory = Main.getExecutor().getHistoryList();
+        int sumProvisionedVm = 0;
+        int sumDeprovisionedVm = 0;
+        for (ExecutorHistory history : executorHistory){
+            sumProvisionedVm += history.getProvisioned();
+            sumDeprovisionedVm += history.getDeprovisioned();
+        }
+        Log.printLine2("Sum provisioned Vms: " + sumProvisionedVm);
+        Log.printLine2("Sum deprovisioned Vms: " + sumDeprovisionedVm);
+        
+        // Cost
+        Log.printLine1("Cost Metrics: ");
+        double sumCost = 0;
+        for (core.Vm vm : Main.vmsDeprovisioned){
+            sumCost += vm.getBill();
+        }
+        Log.printLine2("Sum Cost: " + sumCost + " $");
     }
     public static void saveMonitorHistory(ArrayList<MonitorHistory> historyList){
         ArrayList dataList = new ArrayList();
