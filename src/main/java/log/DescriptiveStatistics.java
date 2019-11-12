@@ -23,7 +23,6 @@ public class DescriptiveStatistics {
     public static void analyze(double[] values, String parameterName){
         org.apache.commons.math3.stat.descriptive.DescriptiveStatistics descriptiveStat = new org.apache.commons.math3.stat.descriptive.DescriptiveStatistics(values);
 
-        DescriptiveStatistics descriptiveStat = new DescriptiveStatistics(values);
         
         double count = values.length;
         double sum = descriptiveStat.getSum();

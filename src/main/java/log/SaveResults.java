@@ -5,14 +5,11 @@
  */
 package log;
 
-import core.Main;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.math3.stat.descriptive;
 /**
  *
  * @author fafa

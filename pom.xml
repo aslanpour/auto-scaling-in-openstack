@@ -20,7 +20,7 @@
       <archive>
       <manifest>
         <addClasspath>true</addClasspath>
-        <mainClass>core.AutoScalerMain</mainClass>
+        <mainClass>core.Main</mainClass>
       </manifest>
       </archive>
       <descriptorRefs>
@@ -28,7 +28,6 @@
       </descriptorRefs>
     </configuration>
   </plugin> 
-<<<<<<< HEAD
   
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
@@ -72,35 +71,5 @@
                 <artifactId>commons-math3</artifactId>
                 <version>3.3</version>
         </dependency>
-=======
-  </plugins>
-  </build>
-  <dependencies>
-  	<dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.17</version>
-	</dependency>
-  	<dependency>
-  		<groupId>args4j</groupId>
-  		<artifactId>args4j</artifactId>
-  		<version>2.32</version>
-  	</dependency>
-  	<dependency>
-		<groupId>ch.ethz.ganymed</groupId>
-		<artifactId>ganymed-ssh2</artifactId>
-		<version>build210</version>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.httpcomponents</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>4.5</version>
-	</dependency>
-	<dependency>
-		<groupId>com.googlecode.json-simple</groupId>
-		<artifactId>json-simple</artifactId>
-		<version>1.1.1</version>
-	</dependency>
->>>>>>> origin/master
 </dependencies>	
 </project>
