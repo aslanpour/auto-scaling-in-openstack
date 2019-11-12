@@ -6,9 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import autoscaling.HaProxyMonitor;
-import autoscaling.MonitorDef;
-import autoscaling.NodeStatusMonitor;
+import monitor.HaProxyMonitor;
+import monitor.Monitor;
+import monitor.NodeStatusMonitor;
 
 import org.apache.log4j.Logger;
 import org.kohsuke.args4j.CmdLineException;
@@ -45,14 +45,14 @@ public class AutoScalerMain {
 
 		setNodes(nodesfile);
 
-		MonitorDef nodestatus = new NodeStatusMonitor(getNodes(), "nodestatus", ASProperties.RESOLUTION_NODE_STATUS_CHECKING.getValueAsInt());
+		Monitor nodestatus = new NodeStatusMonitor(getNodes(), "nodestatus", ASProperties.RESOLUTION_NODE_STATUS_CHECKING.getValueAsInt());
 		
                 Thread nodestatusThread = new Thread(nodestatus);
                 
 		nodestatusThread.setDaemon(true);
 		nodestatusThread.start();
 		
-		MonitorDef haproxy = new HaProxyMonitor("haproxymonitor", ASProperties.RESOLUTION_HAPROXY_STAT_CHECKING.getValueAsInt());
+		Monitor haproxy = new HaProxyMonitor("haproxymonitor", ASProperties.RESOLUTION_HAPROXY_STAT_CHECKING.getValueAsInt());
 		Thread cpuutilThread = new Thread(haproxy);
 		cpuutilThread.setDaemon(true);
 		cpuutilThread.start();
