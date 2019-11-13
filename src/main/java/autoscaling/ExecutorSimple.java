@@ -292,13 +292,13 @@ public class ExecutorSimple extends Executor{
                 System.out.println("Token was not created properly.");
             
             Header[] responseHeader = httpResponse.getAllHeaders();
-            String tokenName = responseHeader[2].getName();
+            String tokenValue = responseHeader[2].getValue();
             
             httpPost.releaseConnection();
             httpPost.reset();
             
             // The authentication code is returned in the HTTP header
-            return tokenName;
+            return tokenValue;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ExecutorSimple.class.getName()).log(Level.SEVERE, null, ex);
         }
