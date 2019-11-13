@@ -87,6 +87,7 @@ public class SaveResults {
         }
         Log.printLine2("Sum Cost: " + sumCost + " $");
     }
+    
     public static void saveMonitorHistory(ArrayList<MonitorHistory> historyList){
         ArrayList dataList = new ArrayList();
         for (MonitorHistory history : historyList){

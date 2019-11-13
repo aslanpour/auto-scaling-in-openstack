@@ -47,6 +47,7 @@ public class Main {
     private static int terminationCounter = 0;
     
     public static void main(String[] args) {
+        
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
