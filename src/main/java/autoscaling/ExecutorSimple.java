@@ -139,6 +139,7 @@ public class ExecutorSimple extends Executor{
 
                 String vmIndex = String.valueOf(generateVmIndex());
                 String vmName = "webserver" + "#" + vmIndex;
+                // allocate an ip and add it to allocatedIps list
                 String ip = allocateIP();
                 
                 String json = "{\"server\": {"
@@ -235,7 +236,8 @@ public class ExecutorSimple extends Executor{
                 // remove from vmsProvisioned
                 Vm tmpVm = vm;
                 Main.vmsProvisioned.remove(vm);
-                
+                //release th ip
+                allocatedIPs.remove(Integer.valueOf((vm.getPrivateIP().replace(".", "-")).split("-")[3]));
                 //add to vmsDeprovisioned
                 tmpVm.setStatus("Destroyed");
                 tmpVm.setTimeDestroyed(Log.getTimestamp());

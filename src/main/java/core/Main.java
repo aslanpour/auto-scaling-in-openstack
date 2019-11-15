@@ -11,10 +11,12 @@ import autoscaling.ExecutorSimple;
 import autoscaling.Monitor;
 import autoscaling.Planner;
 import autoscaling.PlannerRuleBased;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import log.SaveResults;
+import log.Log;
 
 /**
  *
@@ -48,12 +50,21 @@ public class Main {
     
     public static void main(String[] args) {
         // add initial vms in vmsprovisioned
+        addInitialVms();
+        // wait until initial vms are active.
+        try {
+            Thread.sleep(120 * 1000);
+            Log.printLine1("Now, you should run wikijector");
+            Thread.sleep(10 * 1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
                 Thread.sleep(DefaultSettings.MONITORING_INTERVAL);
-                String ff= "/h";
-                if(ff.startsWith("/mediawiki/images"))
                 // call monitor
                 monitor.doMonitoring();
                
@@ -84,6 +95,11 @@ public class Main {
         SaveResults.saveExecutorHistory(getExecutor().getHistoryList());
         // print results to console
         
+    }
+    
+    private static void addInitialVms(){
+        getExecutor().performScaleUp(DefaultSettings.INITIAL_WEB_SERVERS, 
+                                    Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID));
     }
     
     /**

@@ -63,7 +63,7 @@ public class Vm {
       
     public void setFlavorRelatedProperties(String flavorID){
         for (String[] flavor : FLAVOR_TABLE){
-            if (flavor[0] == flavorID){
+            if (flavor[0].equals(flavorID)){
                 this.flavorName = flavor [1];
                 this.vcpu = Integer.valueOf(flavor[2]);
                 this.ram = Integer.valueOf(flavor[3]);

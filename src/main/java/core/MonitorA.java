@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package autoscaling;
+package core;
 
-import autoscaling.MonitorVms.CpuUtilizationCalculator;
-import core.DefaultSettings;
-import core.Main;
-import core.Vm;
+import autoscaling.Monitor;
+import autoscaling.MonitorVms;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,9 +18,7 @@ import java.util.logging.Logger;
  *
  * @author fafa
  */
-public class MonitorVms implements Runnable{
-    // Vm ID and cpu Utilization
-    private double [][] cpuUtilizationPerVm;
+public class MonitorA implements Runnable{
     
     public void run(){
         // create sub threads
@@ -30,7 +26,7 @@ public class MonitorVms implements Runnable{
         int i = 0;
         for (Vm vm : Main.vmsProvisioned){
             thread[i] = new Thread( 
-                    new CpuUtilizationCalculator(i, vm.getIndex(), vm.getName(), vm.getPrivateIP()));
+                    new MonitorVms.CpuUtilizationCalculator(i, vm.getIndex(), vm.getName(), vm.getPrivateIP()));
             i++;    
         }
         //run threads
@@ -45,14 +41,10 @@ public class MonitorVms implements Runnable{
                 Logger.getLogger(MonitorVms.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
-
-    public double[][] getCpuUtilizationPerVm() {
-        return cpuUtilizationPerVm;
-    }
-   
-   //---------------------------------------------------------------------------------------------------- 
-   
+    
+    //-------------------------------------------
     class CpuUtilizationCalculator implements Runnable{
         private int arrayIndex;
         private int vmIndex;
@@ -67,8 +59,7 @@ public class MonitorVms implements Runnable{
         }
         
         public void run(){
-            cpuUtilizationPerVm [arrayIndex][0] = vmIndex; // vm Index
-            cpuUtilizationPerVm [arrayIndex] [1] = getCpuUtilization(vmName, privateIP); // cpu utilization
+
         }
         
             /**
@@ -120,5 +111,4 @@ public class MonitorVms implements Runnable{
 
         }
     }
-    
 }

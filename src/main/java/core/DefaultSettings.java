@@ -27,7 +27,7 @@ public class DefaultSettings {
     // Default pasword for web servers.
     public static final String WEB_SERVER_PASSWORD = "ubuntu";
     // the ID of web server snapshot
-    public static final String OS_COMPUTE_IMAGE_ID = "98cbc1ae-9607-45c1-8632-f2879bc21852";
+    public static final String OS_COMPUTE_IMAGE_ID = "35fc0478-9b87-4e38-be2f-a07c5f6cd04f";
     public static final String OS_NEUTRON_NETWORK_UUID_PRIVATE = "e291c471-deca-4dc6-a593-f2e089bb6d86";
     public static final String OS_NEUTRON_SECURITYGROUP_NAME = "AutoscalingSecurityGroup";
     public static final String OS_COMPUTE_KEYPAIRS_NAME = "mykeypair"; 

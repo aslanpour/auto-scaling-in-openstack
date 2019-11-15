@@ -29,7 +29,8 @@ public abstract class Executor {
     private int maxAllowedScaleUp;
     private int flavorID;
     private int vmIndexGenerator;
-    private List<Integer> allocatedIPs = new ArrayList<Integer>();
+    
+    protected List<Integer> allocatedIPs = new ArrayList<Integer>();
     
     private ArrayList<ExecutorHistory> historyList;
 
@@ -48,7 +49,7 @@ public abstract class Executor {
         this.maxAllowedScaleUp = maxAllowedScaleUp;
         this.flavorID = flavorID;
         this.vmIndexGenerator = 0;
-        
+        // exclude the ip of db server, haproxy, etc.
         for (int ip: alreadyAllocatedIPs){
             allocatedIPs.add(ip);
         }
@@ -81,16 +82,25 @@ public abstract class Executor {
         // get net IP
         String netIP = DefaultSettings.netIP;
         
-        // get host IP
-        for (int ip = 1; ip < 254; ip++){
-            if (allocatedIPs.contains(ip) == false)
+        // get host IP (ip 1 is not allowed)
+        for (int ip = 100; ip < 200; ip++){
+            if (allocatedIPs.contains(ip) == false){
+                allocatedIPs.add(ip);
                 return (netIP + String.valueOf(ip));
+            }
         }
         
         return null; // error
     }
     
-    public void updateSshKnownHosts (String ip){
+    /**
+     * remove the footpath of sshs to this ip by haproxy server 
+     * which is making ssh to webservers to get cpu usage.
+     * If not executed this command, once a new vm is launched with the same ip, making ssh to that 
+     * is not accessible.
+     * @param ip 
+     */
+    public void updateSshKnownHosts (String ip){ //????
        String command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R " + ip; 
     }
     public DefaultSettings.Action getAction() {

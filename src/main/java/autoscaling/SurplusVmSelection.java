@@ -23,7 +23,7 @@ import java.util.Random;
 public class SurplusVmSelection {
        
        
-    protected static Vm policy(DefaultSettings.SurplusVMSelectionPolicy policy, ArrayList<Vm> candidateVms){
+    public static Vm policy(DefaultSettings.SurplusVMSelectionPolicy policy, ArrayList<Vm> candidateVms){
         Vm selectedVm = null;
         
         switch(policy){
