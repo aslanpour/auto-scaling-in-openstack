@@ -49,8 +49,8 @@ public class test {
                                 .setConnectTimeout(30000).build();
                 httpPost.setConfig(config);
 
-                String vmName = "webserver4";
-                String ip = "10.10.0.52";
+                String vmName = "webserver4";//
+                String ip = "10.10.0.52";  
                 
                 String json = "{\"server\": {"
                     + "\"min_count\": 1, "
