@@ -58,10 +58,6 @@ public class test {
                     + "\"name\": \"" + vmName + "\", "
                     + "\"imageRef\": \"" + "e0cd13f1-c644-4376-99ce-02a130382d7d"
                     + "\", \"max_count\": 1, " 
-                        + " \"user_data\":" + " #cloud-config\n" +
-"password: ubuntu\n" +
-"chpasswd: { expire: False }\n" +
-"ssh_pwauth: True "
 //                        + "\"user_data\"" + ": " + "#cloud-config\n" +
                     + "\"networks\": [{\"fixed_ip\": \""+ ip + "\", "
                         + "\"uuid\": \"" + DefaultSettings.OS_NEUTRON_NETWORK_UUID_PRIVATE + "\"}],"
