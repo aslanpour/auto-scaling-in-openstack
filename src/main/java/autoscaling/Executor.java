@@ -90,6 +90,9 @@ public abstract class Executor {
         return null; // error
     }
     
+    public void updateSshKnownHosts (String ip){
+       String command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R " + ip; 
+    }
     public DefaultSettings.Action getAction() {
         return action;
     }
