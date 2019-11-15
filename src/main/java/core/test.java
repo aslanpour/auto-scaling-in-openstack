@@ -49,15 +49,20 @@ public class test {
                                 .setConnectTimeout(30000).build();
                 httpPost.setConfig(config);
 
-                String vmName = "webserver3";
-                String ip = "10.10.0.50";
+                String vmName = "webserver4";
+                String ip = "10.10.0.52";
                 
                 String json = "{\"server\": {"
                     + "\"min_count\": 1, "
                     + "\"flavorRef\": \"" + String.valueOf(flavorID) + "\", "
                     + "\"name\": \"" + vmName + "\", "
-                    + "\"imageRef\": \"" + "35fc0478-9b87-4e38-be2f-a07c5f6cd04f"
-                    + "\", \"max_count\": 1, "
+                    + "\"imageRef\": \"" + "e0cd13f1-c644-4376-99ce-02a130382d7d"
+                    + "\", \"max_count\": 1, " 
+                        + " \"user_data\":" + " #cloud-config\n" +
+"password: ubuntu\n" +
+"chpasswd: { expire: False }\n" +
+"ssh_pwauth: True "
+//                        + "\"user_data\"" + ": " + "#cloud-config\n" +
                     + "\"networks\": [{\"fixed_ip\": \""+ ip + "\", "
                         + "\"uuid\": \"" + DefaultSettings.OS_NEUTRON_NETWORK_UUID_PRIVATE + "\"}],"
     //                + "\"networks\": [{\"uuid\":\"e291c471-deca-4dc6-a593-f2e089bb6d86\"}], "

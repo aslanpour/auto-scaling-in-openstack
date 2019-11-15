@@ -1,0 +1,7 @@
+﻿{
+  "password": "ubuntu",
+  "chpasswd": {
+    "expire": false
+  },
+  "ssh_pwauth": true
+}
