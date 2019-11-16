@@ -41,6 +41,7 @@ public class Analyzer {
     * Analyzing effective parameters
     */
     public void doAnalysis(){
+        Log.printLine2("Analyzer", "doAnalysis", "Analyzing phase started");
 /* initialing Analysis Parameters */
         
         /* calculation of analysis parameters */
@@ -53,6 +54,9 @@ public class Analyzer {
         /* SAVE analysis results to history */
         AnalyzerHistory analyzerHistory = new AnalyzerHistory(analyzedCpuUtilization, analyzedResponseTime);
         getHistoryList().add(analyzerHistory);
+        Log.printLine2("Save Analyed results in the history");
+        Log.printLine2("Analyzed CPU util.=" + analyzedCpuUtilization
+                        + "\nAnalyzed response time=" + analyzedResponseTime);
     }
     
     /**
@@ -60,6 +64,7 @@ public class Analyzer {
      * @return 
      */
     private double ANALAYZE_CPUUtil(String analysisMethod){
+        Log.printLine3("Analyzing CPU util. . .");
         double analyzedCPUUtilization = -1;
         // Get VM monitor history
         ArrayList<MonitorHistory> tmpHistoryList = Main.getMonitor().getMonitorHistory();
@@ -112,6 +117,7 @@ public class Analyzer {
      * @return 
      */
     private double ANALAYZE_ResponseTime(String analysisMethod){
+        Log.printLine3("Analyzing response time . . .");
         double analyzedResponseTime = -1;
         
         // Get monitor history

@@ -40,41 +40,13 @@ public class test {
     public static double[] result = new double[10];
     
     public static void main(String[] args)  {
-        MonitorA monitorA = new MonitorA();
-            Thread monitorAThread = new Thread(monitorA);
-            monitorAThread.setDaemon(true);
-            
-            // monitor Haproxy
-            MonitorB monitorB = new MonitorB();
-            Thread monitorBThread = new Thread(monitorB);
-            monitorBThread.setDaemon(true);
-            
-            monitorAThread.start();
-            System.out.println("monitorA started");
-            monitorBThread.start();
-            System.out.println("monitorB started");
-        try {
-            monitorAThread.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger("a-------------");
-        }
-        try {
-            monitorBThread.join();
-//        performScaleUp(DefaultSettings.INITIAL_WEB_SERVERS, 
-//                                    Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID));
-//        performScaleDown(2);
-        } catch (InterruptedException ex) {
-            Logger.getLogger("b---------");
-        }
         
-        System.out.println("final results ");
-        for (int i =0; i< 10; i++){
-            System.out.println("i=" + result[i]);
-        }
+        System.out.println(name);
+        System.out.println(String.class.getSimpleName().toString());
     }
     
     static DefaultSettings.SurplusVMSelectionPolicy surplusVMSelectionPolicy = DefaultSettings.SurplusVMSelectionPolicy.THE_OLDEST;
-    
+    static String name = String.class.getName();
     public static DefaultSettings.SurplusVMSelectionPolicy getSurplusVMSelectionPolicy() {
         return surplusVMSelectionPolicy;
     }

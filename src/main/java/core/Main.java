@@ -53,30 +53,37 @@ public class Main {
         addInitialVms();
         // wait until initial vms are active.
         try {
+            Log.printLine1("Main", "main", "wait for 2 min untill initial vms are active");
             Thread.sleep(120 * 1000);
-            Log.printLine1("Now, you should run wikijector");
+            Log.printLine1("Now, you should run wikijector in 10 sec");
             Thread.sleep(10 * 1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
+        Log.printLine1("Auto-scaling started working");
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
+                Log.printLine1("Main", "main", "Autoscaler is sleeping until the next monitoring interval");
                 Thread.sleep(DefaultSettings.MONITORING_INTERVAL);
+                
                 // call monitor
                 monitor.doMonitoring();
                
                 getExecutor().setRemainedCooldown(getExecutor().getRemainedCooldown() - DefaultSettings.MONITORING_INTERVAL);
                 timeToRunScaler -= DefaultSettings.MONITORING_INTERVAL;
                
-                if (timeToRunScaler <= 0){
+                if (timeToRunScaler > 0)
+                    Log.printLine1("Main", "main", "Time to scaling: " + (timeToRunScaler / 1000) + " sec");
+                else if (timeToRunScaler <= 0){
+                    Log.printLine2("Main", "main", "Full autoscaling started");
                     // call analyzer
                     analyzer.doAnalysis();
                     // call planner
                     planner.doPlanning();
                     // call executor
+                    executor.doExecution();
                     
                     timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
                 }
@@ -98,6 +105,7 @@ public class Main {
     }
     
     private static void addInitialVms(){
+        Log.printLine1("Main", "addInitialVms", "Initial " + DefaultSettings.INITIAL_WEB_SERVERS + " Vm(s)");
         getExecutor().performScaleUp(DefaultSettings.INITIAL_WEB_SERVERS, 
                                     Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID));
     }
@@ -107,7 +115,7 @@ public class Main {
      * @return 
      */
     private static boolean exit (){
-        
+        Log.printLine1("Main", "exit", "Terminating the experiment");
         if (monitor.getResponseTimeAvg() == 0)
             terminationCounter++;
         else

@@ -40,7 +40,8 @@ public class PlannerRuleBased extends Planner{
     
     @Override
     public void doPlanning(){
-
+        Log.printLine2("PlannerRuleBased", "doMonitoring", "Planner started (rule= " 
+                + rule.name().toString() + ")");
         /* Planner's outputs - initialing output parameters */
         decision = DefaultSettings.PlannerDecision.DO_NOTHING;
         stepSize = DefaultSettings.PLANNER_StEP_SIZE;
@@ -67,6 +68,10 @@ public class PlannerRuleBased extends Planner{
         // Saving PlannerRuleBased results in its History
         PlannerHistory plannerHistory = new PlannerHistory(getDecision(),getStepSize());
         getHistoryList().add(plannerHistory);
+        
+        Log.printLine2("Save planning results in history:");
+        Log.printLine3("decision= " + getDecision().name().toString() +
+                        "\nstep-size= " + getStepSize());
     }
 
     /**

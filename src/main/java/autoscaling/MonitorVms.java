@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import log.Log;
 
 /**
  *
@@ -34,6 +35,7 @@ public class MonitorVms implements Runnable{
             i++;    
         }
         //run threads
+        Log.printLine3("MonitorVms", "run", "Start " + Main.vmsProvisioned.size() + " threads");
         for (i = 0; i <thread.length; i++){
            thread[i].start();
         }
@@ -116,7 +118,9 @@ public class MonitorVms implements Runnable{
             cpuUtilization = 100 - cpuIdle;
             // get only two decimal places
             cpuUtilization = Double.valueOf(new DecimalFormat("#.##").format(cpuUtilization));
-
+            
+            Log.printLine4("CpuUtilizationCalculator", "getCpuUtilization", 
+                    "cpu util for " + serverIP + " is" + cpuUtilization + " %");
             return cpuUtilization;
 
         }

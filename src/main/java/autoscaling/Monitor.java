@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import log.Log;
 import log.MonitorHistory;
 
 /**
@@ -39,6 +40,7 @@ public class Monitor {
        
     public void doMonitoring(){
         try {
+            Log.printLine1("Monitor", "doMonitoring", "Monitoring is active");
             cpuUtilizationAvg = 0;
             cpuUtilizationPerVm = new double[Main.vmsProvisioned.size()][];
             vms = Main.vmsProvisioned.size();
@@ -53,23 +55,25 @@ public class Monitor {
             Thread monitorVmsThread = new Thread(monitorVms);
             monitorVmsThread.setDaemon(true);
             monitorVmsThread.start();
-            
+            Log.printLine2("Vm monitoring thread started");
             // monitor Haproxy
             MonitorHaproxy monitorHaproxy = new MonitorHaproxy();
             Thread monitorHaproxyThread = new Thread(monitorHaproxy);
             monitorHaproxyThread.setDaemon(true);
             monitorHaproxyThread.start();
-            
+            Log.printLine2("Haproxy monitoring started");
             monitorVmsThread.join();
             monitorHaproxyThread.join();
             /* monitoring is done */
-            
+            Log.printLine2("Monitor", "doMonitoring", "Monitoring is done");
             // return calculated cpu for vms, index 0 is vm index and 1 is its cpu util.
             cpuUtilizationPerVm = monitorVms.getCpuUtilizationPerVm();
             for (double[] cpuUtil : cpuUtilizationPerVm){
                 cpuUtilizationAvg += cpuUtil[1];
             }
-            cpuUtilizationAvg /= Main.vmsProvisioned.size();
+            
+            if (Main.vmsProvisioned.size() > 0)
+                cpuUtilizationAvg /= Main.vmsProvisioned.size();
             
             // return calculate current sessions and response time
             
@@ -94,7 +98,9 @@ public class Monitor {
                                                                 vms, 
                                                                 quarantined);
             getMonitorHistory().add(monitorHistory);
-            
+            Log.printLine2("Monitored date was saved into the history as follow:");
+            Log.printLine3("CPU util. avg= " + cpuUtilizationAvg + "\n  ResponseTime avg=" + responseTimeAvg
+                            + "\n  Vms No.= " + vms + "\n  quarantineed Vms No.=" + quarantined);
         } catch (InterruptedException ex) {
             Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
         }

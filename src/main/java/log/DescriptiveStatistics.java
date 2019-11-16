@@ -38,7 +38,7 @@ public class DescriptiveStatistics {
         
         
         System.out.println("Descriptive Statistics Results: \n");
-        System.out.println(parameterName + "\n" +
+        Log.printLine3(parameterName + "\n" +
                             "Count: " + count +
                             "\nSum: " + sum + 
                             "\nMin: " + min + 

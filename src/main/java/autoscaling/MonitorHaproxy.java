@@ -19,6 +19,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.parser.ParseException;
+import log.Log;
 
 /**
  *
@@ -30,6 +31,7 @@ public class MonitorHaproxy implements Runnable{
     private double respnseTimeAvg;
     
     public void run (){
+        Log.printLine3("MonitorHaproxy", "run", "Monitor Haproxy is active");
         try {
             currentSessions = new String[Main.vmsProvisioned.size()][];
             respnseTimeAvg = 0;
@@ -122,6 +124,7 @@ public class MonitorHaproxy implements Runnable{
             String sessions = backend[backendRows][indexCurrentSession];// cuurent sessions
 
             currentSessions[backendRows] = new String[]{name, sessions};
+            Log.printLine4("MonitorHaproxy", "parse", "Session No. name=" + sessions);
         }
         
         //set total response time

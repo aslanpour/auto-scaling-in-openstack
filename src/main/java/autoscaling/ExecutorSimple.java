@@ -50,6 +50,7 @@ public class ExecutorSimple extends Executor{
     
     @Override
     public void doExecution(){
+        Log.printLine2("ExecutorSimple", "doExecution", "Executor started . . .");
         // executor needs to obtain these parameters
         setAction(DefaultSettings.Action.DO_NOTHING);
         setProvisioned(0);
@@ -116,11 +117,18 @@ public class ExecutorSimple extends Executor{
                                                         getFlavorID());
         
         getHistoryList().add(history);
+        
+        Log.printLine2("ExecutorSimple", "doExecution", "Save history:"
+                        + "\naction= " + getAction().name().toString()
+                        + "\nprovisioned= " + getProvisioned()
+                        + "\ndeprovisioned= " + getDeprovisioned()
+                        + "\nflavorID= " + getFlavorID());
     }
     
     @Override
     public void performScaleUp(int stepSize, int flavorID){
         try{
+            Log.printLine3("ExecutorSimple", "performScaleUp", "is running");
             //OpenStack Authentication
             String OS_TOKEN = authentication();
             
@@ -138,7 +146,7 @@ public class ExecutorSimple extends Executor{
                 httpPost.setConfig(config);
 
                 String vmIndex = String.valueOf(generateVmIndex());
-                String vmName = "webserver" + "#" + vmIndex;
+                String vmName = "webserver" + "_" + vmIndex;
                 // allocate an ip and add it to allocatedIps list
                 String ip = allocateIP();
                 
@@ -184,6 +192,9 @@ public class ExecutorSimple extends Executor{
                                 "", String.valueOf(flavorID), "runnung", "nova", Log.getTimestamp());
                                 
                 Main.vmsProvisioned.add(vm);
+                
+                Log.printLine3("ExecutorSimple", "performScaleUp", "New Vm created:");
+                Log.printLine4(vmName + " " + ip);
             }
         } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -197,6 +208,7 @@ public class ExecutorSimple extends Executor{
     @Override
     public void performScaleDown(int stepSize){
         try {
+            Log.printLine3("ExecutorSimple", "perfromScaleDown", "is running to remove " + stepSize + " Vm(s)");
             //OpenStack Authentication
             String OS_TOKEN = authentication();
             
@@ -220,7 +232,7 @@ public class ExecutorSimple extends Executor{
 
                 HttpResponse httpResponse = httpClient.execute(httpDelete);
                 if (httpResponse.getStatusLine().getStatusCode() != 204)
-                    System.out.println("Server was not Deleted.");
+                    System.out.println("Error- Server was not Deleted.");
 
                 Header[] responseHeader = httpResponse.getAllHeaders(); 
                 String headerValue = responseHeader[1].getValue();
@@ -246,6 +258,9 @@ public class ExecutorSimple extends Executor{
                 
                 // update SSH known Hosts
                 updateSshKnownHosts(vm.getPrivateIP());
+                
+                Log.printLine3("ExecutorSimple", "performScaleDown", "is done");
+                Log.printLine4(vm.getName() + " " + vm.getPrivateIP() + " destroyed");
             }
             
             
@@ -267,6 +282,7 @@ public class ExecutorSimple extends Executor{
     @Override
     public String authentication(){
         try {
+            Log.printLine3("ExecutorSimple", "authentication", "Create a token for OpenStack authentication");
             //Create Token
             HttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(DefaultSettings.OS_IDENTITY_API + "/auth/tokens?nocatalog");
@@ -350,11 +366,12 @@ public class ExecutorSimple extends Executor{
 
 		int exitVal = p.waitFor();
 		if (exitVal == 0) {
-			System.out.println("Success!");
+			Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", 
+                                "Haproxy " + addRemove + "ed" + " " + serverName + " " + serverIP);
 			System.out.println(output);
 			System.exit(0);
 		} else {
-			//abnormal...
+			Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "Updating Error");
 		}
             } catch (IOException e) {
                     System.out.println(e);

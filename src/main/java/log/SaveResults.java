@@ -20,9 +20,10 @@ public class SaveResults {
 
     public static DecimalFormat dft = new DecimalFormat("#.##");
     
-    public static void PrintToConsole(){
+    public static void printToConsole(){
+        Log.printLine1("SaveResults", "printToConsole", "Experimental Results:");
         // monitor
-        Log.printLine1("Monitoring Metrics: ");
+        Log.printLine2("Monitoring Metrics: ");
         ArrayList<MonitorHistory> monitorHistory = Main.getMonitor().getMonitorHistory();
         double[] cpuUtil = new double[monitorHistory.size()];
         double[] responseTime = new double[monitorHistory.size()];
@@ -36,10 +37,10 @@ public class SaveResults {
         }
         DescriptiveStatistics.analyze(cpuUtil, "Cpu Utilization");
         DescriptiveStatistics.analyze(responseTime, "Response Time");
-        Log.printLine2("Max Running Vms: " + maxRunningVms);
+        Log.printLine3("Max Running Vms: " + maxRunningVms);
         
         //analyze
-        Log.printLine1("Analyzing Metrics: ");
+        Log.printLine2("Analyzing Metrics: ");
         ArrayList<AnalyzerHistory> analyzerHistory = Main.getAnalyzer().getHistoryList();
         double[] cpuUtilAnalyzed = new double[analyzerHistory.size()];
         double[] responseTimeAnalyzed = new double[analyzerHistory.size()];
@@ -53,7 +54,7 @@ public class SaveResults {
         DescriptiveStatistics.analyze(responseTimeAnalyzed, "Analyzed Response Time");
         
         // planner
-        Log.printLine1("Planning Metrics: ");
+        Log.printLine2("Planning Metrics: ");
         ArrayList<PlannerHistory> plannerHistory = Main.getPlanner().getHistoryList();
         int sumScaleUpDecision = 0;
         int sumScaleDownDecision = 0;
@@ -64,11 +65,11 @@ public class SaveResults {
                 sumScaleDownDecision++;
         }
         
-        Log.printLine2("Sum scale up decisions: " + sumScaleUpDecision);
-        Log.printLine2("Sum scale down decisions: " + sumScaleDownDecision);
+        Log.printLine3("Sum scale up decisions: " + sumScaleUpDecision);
+        Log.printLine3("Sum scale down decisions: " + sumScaleDownDecision);
         
         // Executor
-        Log.printLine1("Executing Metrics: ");
+        Log.printLine2("Executing Metrics: ");
         ArrayList<ExecutorHistory> executorHistory = Main.getExecutor().getHistoryList();
         int sumProvisionedVm = 0;
         int sumDeprovisionedVm = 0;
@@ -76,19 +77,20 @@ public class SaveResults {
             sumProvisionedVm += history.getProvisioned();
             sumDeprovisionedVm += history.getDeprovisioned();
         }
-        Log.printLine2("Sum provisioned Vms: " + sumProvisionedVm);
-        Log.printLine2("Sum deprovisioned Vms: " + sumDeprovisionedVm);
+        Log.printLine3("Sum provisioned Vms: " + sumProvisionedVm);
+        Log.printLine3("Sum deprovisioned Vms: " + sumDeprovisionedVm);
         
         // Cost
-        Log.printLine1("Cost Metrics: ");
+        Log.printLine2("Cost Metrics: ");
         double sumCost = 0;
         for (core.Vm vm : Main.vmsDeprovisioned){
             sumCost += vm.getBill();
         }
-        Log.printLine2("Sum Cost: " + sumCost + " $");
+        Log.printLine3("Sum Cost: " + sumCost + " $");
     }
     
     public static void saveMonitorHistory(ArrayList<MonitorHistory> historyList){
+        Log.printLine1("SaveResults", "saveMonitorHistory", "Save monitoring history to CSV file");
         ArrayList dataList = new ArrayList();
         for (MonitorHistory history : historyList){
             double cpuUtilizationAvg = history.getCpuUtilizationAvg();
@@ -125,6 +127,7 @@ public class SaveResults {
     }
     
     public static void saveAnalyzerHistory(ArrayList<AnalyzerHistory> historyList){
+        Log.printLine1("SaveResults", "saveAnalyzerHistory", "Save analyzing history to CSV file");
         ArrayList dataList = new ArrayList();
         for (AnalyzerHistory history : historyList){
             double cpuUtilizationAvg = history.getCpuUtilization();
@@ -150,6 +153,7 @@ public class SaveResults {
     }
     
     public static void savePlannerHistory(ArrayList<PlannerHistory> historyList){
+        Log.printLine1("SaveResults", "savePlannerHistory", "Save planning history to CSV file");
         ArrayList dataList = new ArrayList();
         for (PlannerHistory history : historyList){
             double decision = history.getDecision().ordinal();
@@ -175,6 +179,7 @@ public class SaveResults {
     }
     
     public static void saveExecutorHistory(ArrayList<ExecutorHistory> historyList){
+        Log.printLine1("SaveResults", "saveExecutorHistory", "Save executing history to CSV file");
         ArrayList dataList = new ArrayList();
         for (ExecutorHistory history : historyList){
             double action = history.getAction().ordinal();
