@@ -87,8 +87,9 @@ public class MonitorVms implements Runnable{
                // Get CPU idle percentage
                 p = Runtime.getRuntime().exec("sshpass -p " + DefaultSettings.WEB_SERVER_PASSWORD + 
                 " ssh -o " + "StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
-                + DefaultSettings.WEB_SERVER_USERNAME + "@" + serverIP + " sudo bash " 
-                + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
+                + DefaultSettings.WEB_SERVER_USERNAME + "@" + serverIP + 
+                " -i " + DefaultSettings.FILE_LOCATION_HAPROXY_PRIVATE_KEY 
+                + " sudo bash " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
 
                 p.waitFor();
                 BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));

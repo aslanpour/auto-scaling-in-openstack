@@ -16,6 +16,9 @@ public class DefaultSettings {
     // file to update haproxy
     public static final String FILE_LOCATION_HAPROXY_RECONFIGURATION = "/home/ubuntu/haproxy_reconfiguration.sh";
     
+    // haproxy private key
+    public static final String FILE_LOCATION_HAPROXY_PRIVATE_KEY = "/home/ubuntu/mykeypair.pem";
+    
     public static final String OS_COMPUTE_API = "http://192.168.0.1:8774/v2.1/192ac977c8034bbd947efac59cdb4725";
     public static final String OS_COMPUTE_API_V2_48 = "http://192.168.0.1:8774/v2.48/192ac977c8034bbd947efac59cdb4725";
     public static final String OS_COMPUTE_API_V3 = "http://192.168.0.1:8774/v3/192ac977c8034bbd947efac59cdb4725";
@@ -29,7 +32,9 @@ public class DefaultSettings {
     //Default ubuntu user
     public static final String WEB_SERVER_USERNAME = "ubuntu";
     // the ID of web server snapshot
-    public static final String OS_COMPUTE_IMAGE_ID = "35fc0478-9b87-4e38-be2f-a07c5f6cd04f";
+    // small snapshot:    a5262b74-9f39-4c3c-8eb7-6cf4abba913c
+    // medium snapshot:   
+    public static final String OS_COMPUTE_IMAGE_ID = "a5262b74-9f39-4c3c-8eb7-6cf4abba913c";
     public static final String OS_NEUTRON_NETWORK_UUID_PRIVATE = "e291c471-deca-4dc6-a593-f2e089bb6d86";
     public static final String OS_NEUTRON_SECURITYGROUP_NAME = "AutoscalingSecurityGroup";
     public static final String OS_COMPUTE_KEYPAIRS_NAME = "mykeypair"; 
