@@ -8,9 +8,15 @@ package autoscaling;
 import core.DefaultSettings;
 import core.DefaultSettings.SurplusVMSelectionPolicy;
 import core.Vm;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import log.ExecutorHistory;
 
@@ -100,8 +106,36 @@ public abstract class Executor {
      * is not accessible.
      * @param ip 
      */
-    public void updateSshKnownHosts (String ip){ //????
-       String command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R " + ip; 
+    public void updateSshKnownHosts (String ip){ 
+        
+       double cpuIdle = 0;
+            double cpuUtilization = 0;
+
+        try {
+            Process p = null;
+            
+            String command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R " + ip;
+           // Reset KnonwHosts
+            p = Runtime.getRuntime().exec(command);
+
+            p.waitFor();
+            BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = "";
+            String output = "";
+            int counter = 0;
+            while ((line = buf.readLine()) != null) {
+                // return the bash output
+                System.out.println(Double.valueOf(line));
+            }
+            System.out.println(output);
+            p = null;
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     public DefaultSettings.Action getAction() {
         return action;

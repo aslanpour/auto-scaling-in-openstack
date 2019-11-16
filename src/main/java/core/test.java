@@ -6,6 +6,8 @@
 package core;
 
 import autoscaling.ExecutorSimple;
+import autoscaling.MonitorHaproxy;
+import autoscaling.MonitorVms;
 import autoscaling.SurplusVmSelection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,11 +37,40 @@ import org.apache.http.impl.client.HttpClients;
  */
 public class test {
     static int vmIndexGenerator = 0;
+    public static double[] result = new double[10];
     
-    public static void main(String[] args) {
-        performScaleUp(DefaultSettings.INITIAL_WEB_SERVERS, 
-                                    Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID));
-        performScaleDown(2);
+    public static void main(String[] args)  {
+        MonitorA monitorA = new MonitorA();
+            Thread monitorAThread = new Thread(monitorA);
+            monitorAThread.setDaemon(true);
+            
+            // monitor Haproxy
+            MonitorB monitorB = new MonitorB();
+            Thread monitorBThread = new Thread(monitorB);
+            monitorBThread.setDaemon(true);
+            
+            monitorAThread.start();
+            System.out.println("monitorA started");
+            monitorBThread.start();
+            System.out.println("monitorB started");
+        try {
+            monitorAThread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger("a-------------");
+        }
+        try {
+            monitorBThread.join();
+//        performScaleUp(DefaultSettings.INITIAL_WEB_SERVERS, 
+//                                    Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID));
+//        performScaleDown(2);
+        } catch (InterruptedException ex) {
+            Logger.getLogger("b---------");
+        }
+        
+        System.out.println("final results ");
+        for (int i =0; i< 10; i++){
+            System.out.println("i=" + result[i]);
+        }
     }
     
     static DefaultSettings.SurplusVMSelectionPolicy surplusVMSelectionPolicy = DefaultSettings.SurplusVMSelectionPolicy.THE_OLDEST;

@@ -20,95 +20,54 @@ import java.util.logging.Logger;
  */
 public class MonitorA implements Runnable{
     
+    
     public void run(){
         // create sub threads
-        Thread[] thread = new Thread[Main.vmsProvisioned.size()];
-        int i = 0;
-        for (Vm vm : Main.vmsProvisioned){
+        Thread[] thread = new Thread[5];
+
+        for (int i = 0; i < 5; i++){
             thread[i] = new Thread( 
-                    new MonitorVms.CpuUtilizationCalculator(i, vm.getIndex(), vm.getName(), vm.getPrivateIP()));
-            i++;    
+                    new MonitorA.CpuUtilizationCalculator(i));
         }
         //run threads
-        for (i = 0; i <thread.length; i++){
+        for (int i = 0; i <thread.length; i++){
            thread[i].start();
         }
         //wait for all threads being done
-        for (i = 0; i <thread.length; i++){
+        for (int i = 0; i <thread.length; i++){
             try {
                 thread[i].join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(MonitorVms.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger("ex------monitor a- join");
             }
         }
+        System.out.println("Monitor A is done. ");
+       
         
     }
     
     //-------------------------------------------
     class CpuUtilizationCalculator implements Runnable{
-        private int arrayIndex;
-        private int vmIndex;
-        private String vmName;
-        private String privateIP;
+        private int index;
 
-        private CpuUtilizationCalculator(int arrayIndex, int vmIndex, String vmName,String privateIP) {
-            this.arrayIndex = arrayIndex;
-            this.vmIndex = vmIndex;
-            this.vmName = vmName;
-            this.privateIP = privateIP;
+        private CpuUtilizationCalculator(int index) {
+            this.index = index;
         }
         
         public void run(){
-
+            test.result[index] = getA(index);
         }
         
-            /**
-         * Make SSH from local to remote server, run a bash file to get CPU idle percentage, 
-         * return the output to local and then to java program
-         * @param serverName
-         * @param serverIP
-         * @return 
-         */
-        private double getCpuUtilization(String serverName, String serverIP){
-            double cpuIdle = 0;
-            double cpuUtilization = 0;
-
-            try {
-                Process p = null;
-               // Get CPU idle percentage
-                p = Runtime.getRuntime().exec("sshpass -p " + DefaultSettings.WEB_SERVER_PASSWORD + 
-                " ssh -o " + "StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
-                + serverName + "@" + serverIP + " sudo bash " 
-                + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
-
-                p.waitFor();
-                BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line = "";
-                String output = "";
-                int counter = 0;
-                while ((line = buf.readLine()) != null) {
-                    // return the bash output
-                    cpuIdle = Double.valueOf(line);
-                    counter++;
-                    output += line + "\n";
-                }
-                if (counter> 1) System.out.println("ERROR - getCpuUtilization returned more than one output");
-                System.out.println(output);
-                p = null;
-
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
+        public synchronized double getA(int index){
+            double out;
+            switch(index){
+                case 0: out=00;break;
+                case 1: out=11; break;
+                case 2: out=22;break;
+                case 3:out=33;break;
+                default:out=44;break;
             }
-
-            // change idle percentage to utilization
-            cpuUtilization = 100 - cpuIdle;
-            // get only two decimal places
-            cpuUtilization = Double.valueOf(new DecimalFormat("#.##").format(cpuUtilization));
-
-            return cpuUtilization;
-
+            return out;
         }
     }
 }

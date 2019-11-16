@@ -243,6 +243,9 @@ public class ExecutorSimple extends Executor{
                 tmpVm.setTimeDestroyed(Log.getTimestamp());
                 tmpVm.billCalculator();
                 Main.vmsDeprovisioned.add(tmpVm);
+                
+                // update SSH known Hosts
+                updateSshKnownHosts(vm.getPrivateIP());
             }
             
             
