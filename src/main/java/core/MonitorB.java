@@ -22,7 +22,7 @@ public class MonitorB implements Runnable{
     
     
     public void run(){
-        for (int i =0; i< 3; i++)
+        for (int i =0; i< 3; i++)  
             System.out.println("monitorB" + "  i=" +i);
         
         System.out.println("monitorB is done");
