@@ -30,7 +30,7 @@ public class MonitorVms implements Runnable{
         int i = 0;
         for (Vm vm : Main.vmsProvisioned){
             thread[i] = new Thread( 
-                    new CpuUtilizationCalculator(i, vm.getIndex(), vm.getName(), vm.getPrivateIP()));
+                new CpuUtilizationCalculator(i, vm.getIndex(), vm.getName(), vm.getPrivateIP()));
             i++;    
         }
         //run threads
@@ -68,7 +68,7 @@ public class MonitorVms implements Runnable{
         
         public void run(){
             cpuUtilizationPerVm [arrayIndex][0] = vmIndex; // vm Index
-            cpuUtilizationPerVm [arrayIndex] [1] = getCpuUtilization(vmName, privateIP); // cpu utilization
+            cpuUtilizationPerVm [arrayIndex] [1] = getCpuUtilization(privateIP); // cpu utilization
         }
         
             /**
@@ -78,7 +78,7 @@ public class MonitorVms implements Runnable{
          * @param serverIP
          * @return 
          */
-        private double getCpuUtilization(String serverName, String serverIP){
+        private double getCpuUtilization(String serverIP){
             double cpuIdle = 0;
             double cpuUtilization = 0;
 
@@ -87,7 +87,7 @@ public class MonitorVms implements Runnable{
                // Get CPU idle percentage
                 p = Runtime.getRuntime().exec("sshpass -p " + DefaultSettings.WEB_SERVER_PASSWORD + 
                 " ssh -o " + "StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
-                + serverName + "@" + serverIP + " sudo bash " 
+                + DefaultSettings.WEB_SERVER_USERNAME + "@" + serverIP + " sudo bash " 
                 + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
 
                 p.waitFor();

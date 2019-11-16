@@ -26,6 +26,8 @@ public class DefaultSettings {
     public static final String WEB_SERVER_NAME = "webserver";
     // Default pasword for web servers.
     public static final String WEB_SERVER_PASSWORD = "ubuntu";
+    //Default ubuntu user
+    public static final String WEB_SERVER_USERNAME = "ubuntu";
     // the ID of web server snapshot
     public static final String OS_COMPUTE_IMAGE_ID = "35fc0478-9b87-4e38-be2f-a07c5f6cd04f";
     public static final String OS_NEUTRON_NETWORK_UUID_PRIVATE = "e291c471-deca-4dc6-a593-f2e089bb6d86";
