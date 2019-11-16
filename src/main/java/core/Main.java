@@ -65,7 +65,7 @@ public class Main {
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
-                Log.printLine1("Main", "main", "Autoscaler is sleeping until the next monitoring interval");
+                Log.printLine1("Main", "main", "Sleeping until the next monitoring interval");
                 Thread.sleep(DefaultSettings.MONITORING_INTERVAL);
                 
                 // call monitor
@@ -96,6 +96,7 @@ public class Main {
         getExecutor().performScaleDown(vmsProvisioned.size());
         
         // print logs to CSV file
+        Log.printLine1("Main", "main", "Printing results . . .");
         SaveResults.saveMonitorHistory(getMonitor().getMonitorHistory());
         SaveResults.saveAnalyzerHistory(getAnalyzer().getHistoryList());
         SaveResults.savePlannerHistory(getPlanner().getHistoryList());
@@ -116,7 +117,7 @@ public class Main {
      */
     private static boolean exit (){
         Log.printLine1("Main", "exit", "Terminating the experiment");
-        if (monitor.getResponseTimeAvg() == 0)
+        if (monitor.getResponseTimeAvg() == 0)//????or cpu
             terminationCounter++;
         else
             terminationCounter = 0;

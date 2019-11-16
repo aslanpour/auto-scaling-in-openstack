@@ -89,11 +89,11 @@ public class ExecutorSimple extends Executor{
                 }
                 break;
             case SCALE_DOWN:
-                if (Main.vmsProvisioned.size() > 0) {
+                if (Main.vmsProvisioned.size() > DefaultSettings.MIN_NUMBER_OF_WEB_SERVER) {
                     setAction(DefaultSettings.Action.SCALE_DOWN);
                     
-                    if ((Main.vmsProvisioned.size() - stepSize) < 0){
-                        stepSize = Main.vmsProvisioned.size();
+                    if ((Main.vmsProvisioned.size() - stepSize) < DefaultSettings.MIN_NUMBER_OF_WEB_SERVER){
+                        stepSize = Main.vmsProvisioned.size() - DefaultSettings.MIN_NUMBER_OF_WEB_SERVER;
                         setAction(DefaultSettings.Action.SCALE_DOWN_REDUCED_BY_MAX_ALLOWED);
                     }
                     //perform scale down
@@ -102,7 +102,7 @@ public class ExecutorSimple extends Executor{
                         
                     setDeprovisioned(stepSize);
                 }else 
-                    setAction(DefaultSettings.Action.SCALE_DOWN_NO_VM_EXIST);
+                    setAction(DefaultSettings.Action.SCALE_DOWN_BANNED_BY_MIN_ALLOWED_VM);
                     
                 break;
             default://do nothing

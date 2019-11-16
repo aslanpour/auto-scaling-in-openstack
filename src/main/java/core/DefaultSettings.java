@@ -101,6 +101,7 @@ public class DefaultSettings {
     }
     public static int COOLDOWN = 0;
     public static int MAX_ALLOWED_SCALE_UP = 10;
+    public static int MIN_NUMBER_OF_WEB_SERVER = 1;
     // Table of flavors
     public static final String[][] FLAVOR_TABLE = new String[][]{
         //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
@@ -122,6 +123,7 @@ public class DefaultSettings {
         SCALE_UP_BANNED_BY_MAX_ALLOWED_VM,
         SCALE_UP_REDUCED_BY_MAX_ALLOWED_VM,
         SCALE_DOWN_NO_VM_EXIST,
-        SCALE_DOWN_REDUCED_BY_MAX_ALLOWED
+        SCALE_DOWN_REDUCED_BY_MAX_ALLOWED,
+        SCALE_DOWN_BANNED_BY_MIN_ALLOWED_VM
     }
 }
