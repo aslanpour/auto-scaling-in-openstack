@@ -30,9 +30,11 @@ public abstract class Executor {
     private int deprovisioned;
     private int quarantineed;
     SurplusVMSelectionPolicy surplusVMSelectionPolicy;
+    private boolean cooldownEnabled;
     private int cooldown;
     private int remainedCooldown;
-    private int maxAllowedScaleUp;
+    private int maxAllowedWebServer;
+    private int minAllowedWebServer;
     private int flavorID;
     private int vmIndexGenerator;
     
@@ -41,18 +43,23 @@ public abstract class Executor {
     private ArrayList<ExecutorHistory> historyList;
 
     public Executor(SurplusVMSelectionPolicy surplusVMSelectionPolicy, 
+                    boolean coolDownEnabled,
                     int cooldown, 
-                    int maxAllowedScaleUp, 
-                    int flavorID, int[] alreadyAllocatedIPs) {
+                    int maxAllowedWebServer,
+                    int minAllowedWebServer,
+                    int flavorID, 
+                    int[] alreadyAllocatedIPs) {
         // executor needs to obtain these parameters
         action = DefaultSettings.Action.DO_NOTHING;
         provisioned = 0;
         deprovisioned = 0; 
         quarantineed = 0;
         this.surplusVMSelectionPolicy = surplusVMSelectionPolicy;
+        this.cooldownEnabled = coolDownEnabled;
         this.cooldown = cooldown;
         this.remainedCooldown = 0;
-        this.maxAllowedScaleUp = maxAllowedScaleUp;
+        this.maxAllowedWebServer = maxAllowedWebServer;
+        this.minAllowedWebServer = minAllowedWebServer;
         this.flavorID = flavorID;
         this.vmIndexGenerator = 0;
         // exclude the ip of db server, haproxy, etc.
@@ -183,6 +190,15 @@ public abstract class Executor {
         this.surplusVMSelectionPolicy = surplusVMSelectionPolicy;
     }
 
+    public boolean isCooldownEnabled() {
+        return cooldownEnabled;
+    }
+
+    public void setCooldownEnabled(boolean cooldownEnabled) {
+        this.cooldownEnabled = cooldownEnabled;
+    }
+
+    
     public int getCooldown() {
         return cooldown;
     }
@@ -199,12 +215,20 @@ public abstract class Executor {
         this.remainedCooldown = remainedCooldown;
     }
 
-    public int getMaxAllowedScaleUp() {
-        return maxAllowedScaleUp;
+    public int getMaxAllowedWebServer() {
+        return maxAllowedWebServer;
     }
 
-    public void setMaxAllowedScaleUp(int maxAllowedScaleUp) {
-        this.maxAllowedScaleUp = maxAllowedScaleUp;
+    public void setMaxAllowedWebServer(int maxAllowedWebServer) {
+        this.maxAllowedWebServer = maxAllowedWebServer;
+    }
+
+    public int getMinAllowedWebServer() {
+        return minAllowedWebServer;
+    }
+
+    public void setMinAllowedWebServer(int minAllowedWebServer) {
+        this.minAllowedWebServer = minAllowedWebServer;
     }
 
     public int getFlavorID() {

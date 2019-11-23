@@ -40,9 +40,11 @@ public class Main {
                                                         DefaultSettings.PLANNER_RT_DOWN, 
                                                         DefaultSettings.PLANNER_StEP_SIZE);
     
-    public static Executor executor = new ExecutorSimple(DefaultSettings.SurplusVMSelectionPolicy.THE_OLDEST, 
+    public static Executor executor = new ExecutorSimple(DefaultSettings.surplusVMSelectionPolicy, 
+                                            DefaultSettings.COOLDOWN_ENABLED,
                                             DefaultSettings.COOLDOWN, 
-                                            DefaultSettings.MAX_ALLOWED_SCALE_UP, 
+                                            DefaultSettings.MAX_ALLOWED_WEB_SERVER, 
+                                            DefaultSettings.MIN_ALLOWED_WEB_SERVER,
                                             Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID),
                                             DefaultSettings.alreadyAllocatedIPs);
     
@@ -50,12 +52,12 @@ public class Main {
     
     public static void main(String[] args) {
         // add initial vms in vmsprovisioned
-        addInitialVms();
+        createInitialVms();
         // wait until initial vms are active.
         try {
-            Log.printLine1("Main", "main", "wait for 2 min untill initial vms are active");
+            Log.printLine1("Main", "main", "wait for 2 min until initial vms are active");
             Thread.sleep(120 * 1000);
-            Log.printLine1("Now, you should run wikijector in 10 sec");
+            Log.printLine1("Now, you should run wikijector (in 10 sec)");
             Thread.sleep(10 * 1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -71,7 +73,11 @@ public class Main {
                 // call monitor
                 monitor.doMonitoring();
                
-                getExecutor().setRemainedCooldown(getExecutor().getRemainedCooldown() - DefaultSettings.MONITORING_INTERVAL);
+                //
+                if (executor.isCooldownEnabled() && executor.getRemainedCooldown() > 0)
+                    getExecutor().setRemainedCooldown(
+                            getExecutor().getRemainedCooldown() - DefaultSettings.MONITORING_INTERVAL);
+                
                 timeToRunScaler -= DefaultSettings.MONITORING_INTERVAL;
                
                 if (timeToRunScaler > 0)
@@ -93,7 +99,8 @@ public class Main {
         }
         
         // destroy running vms
-        getExecutor().performScaleDown(vmsProvisioned.size());
+        terminator();
+        
         
         // print logs to CSV file
         Log.printLine1("Main", "main", "Printing results . . .");
@@ -105,19 +112,19 @@ public class Main {
         
     }
     
-    private static void addInitialVms(){
-        Log.printLine1("Main", "addInitialVms", "Initial " + DefaultSettings.INITIAL_WEB_SERVERS + " Vm(s)");
+    private static void createInitialVms(){
+        Log.printLine1("Main", "createInitialVms", "Initial " + DefaultSettings.INITIAL_WEB_SERVERS + " Vm(s)");
         getExecutor().performScaleUp(DefaultSettings.INITIAL_WEB_SERVERS, 
                                     Integer.valueOf(DefaultSettings.EXECUTOR_SCALING_FLAVOR_ID));
     }
     
     /**
-     * Terminate if 30 subsequent monitoring intervals with captured response time of 0.
+     * Terminate if 30 subsequent monitoring intervals with captured current sessions of 0.
      * @return 
      */
     private static boolean exit (){
-        Log.printLine1("Main", "exit", "Terminating the experiment");
-        if (monitor.getResponseTimeAvg() == 0)//????or cpu
+        Log.printLine1("Main", "exit", "Check for terminating the experiment");
+        if (monitor.getCurrentSessionSum() == 0)//????current sessions
             terminationCounter++;
         else
             terminationCounter = 0;
@@ -125,6 +132,23 @@ public class Main {
         return terminationCounter >= 30;
     }
 
+    static private void terminator(){
+        Thread terminatorThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getExecutor().performScaleDown(vmsProvisioned.size());
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        
+        terminatorThread.start();
+        try {
+            terminatorThread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
     public static Monitor getMonitor() {
         return monitor;
     }

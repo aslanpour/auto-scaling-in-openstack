@@ -73,9 +73,10 @@ public class Analyzer {
         double cpuUtil = tmpHistoryList.get(sizeHistory - 1).getCpuUtilizationAvg();
         // Set a list of monitored Cpu utilization
         double cpuUtilList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
-            if ((sizeHistory - 1 - i) >= 0) // if history exist
-                cpuUtilList[i] = tmpHistoryList.get(sizeHistory - 1 - i).getCpuUtilizationAvg();
+        int j = 0;
+        for(int i = (sizeHistory - timeWindow); i< sizeHistory;i++){
+            cpuUtilList[j] = tmpHistoryList.get(i).getCpuUtilizationAvg();
+            j++;
         }
         
         switch(analysisMethod){
@@ -127,11 +128,12 @@ public class Analyzer {
         double responseTime = tmpHistoryList.get(sizeHistory - 1).getResponseTimeAvg();
         // Set a list of monitored Response Time
         double responseTimeList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
-            if ((sizeHistory - 1 - i) >= 0) // if history exist
-                responseTimeList[i] = tmpHistoryList.get(sizeHistory - 1 - i).getResponseTimeAvg();
+
+        int j = 0;
+        for(int i = (sizeHistory - timeWindow); i< sizeHistory;i++){
+            responseTimeList[j] = tmpHistoryList.get(i).getResponseTimeAvg();
+            j++;
         }
-        
                      
         switch(analysisMethod){
             // Simple
@@ -188,7 +190,7 @@ public class Analyzer {
         double sumWeightedItem = 0;
         double sumWeight = 0;
         int weight = 1;
-
+        
         for(int i = 0; i < parameterList.length; i++){
             sumWeightedItem += parameterList[i] * weight;  
 

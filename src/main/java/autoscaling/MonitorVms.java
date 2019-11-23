@@ -120,7 +120,7 @@ public class MonitorVms implements Runnable{
             cpuUtilization = Double.valueOf(new DecimalFormat("#.##").format(cpuUtilization));
             
             Log.printLine4("CpuUtilizationCalculator", "getCpuUtilization", 
-                    "cpu util for " + serverIP + " is" + cpuUtilization + " %");
+                    "cpu util for " + vmName + " is" + cpuUtilization + " %");
             return cpuUtilization;
 
         }

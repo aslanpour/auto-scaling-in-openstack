@@ -16,16 +16,24 @@ public class MonitorHistory extends History {
     private double responseTimeAvg;
     // vm index and sessions
     private int sessions[][];
+    private int currentSessionsSum;
     private int vms;
     
     private int quarantineeVms;
 
-    public MonitorHistory(double cpuUtilizationAvg, double[][] cpuUtilizationPerVm, double responseTimeAvg, int[][] sessions, int vms, int quarantineeVms) {
+    public MonitorHistory(double cpuUtilizationAvg, 
+                            double[][] cpuUtilizationPerVm, 
+                            double responseTimeAvg, 
+                            int[][] sessions, 
+                            int currentSessionsSum,
+                            int vms, 
+                            int quarantineeVms) {
         super();
         this.cpuUtilizationAvg = cpuUtilizationAvg;
         this.cpuUtilizationPerVm = cpuUtilizationPerVm;
         this.responseTimeAvg = responseTimeAvg;
         this.sessions = sessions;
+        this.currentSessionsSum = currentSessionsSum;
         this.vms = vms;
         this.quarantineeVms = quarantineeVms;
     }
@@ -62,6 +70,15 @@ public class MonitorHistory extends History {
         this.sessions = sessions;
     }
 
+    public int getCurrentSessionsSum() {
+        return currentSessionsSum;
+    }
+
+    public void setCurrentSessionsSum(int currentSessionsSum) {
+        this.currentSessionsSum = currentSessionsSum;
+    }
+
+    
     public int getVms() {
         return vms;
     }

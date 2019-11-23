@@ -32,11 +32,21 @@ public class Monitor {
     private double [][] cpuUtilizationPerVm; 
     // Vm ID and current sessions
     private int [][] currentSessions;
+    private int currentSessionSum;
     private double responseTimeAvg;
     private int vms;
     private int quarantined;
     
-    
+    public Monitor(){
+        this.cpuUtilizationAvg = 0;
+        this.responseTimeAvg = 0;
+        this.cpuUtilizationPerVm = new double[Main.vmsProvisioned.size()][];
+        this.currentSessions = null;
+        this.currentSessionSum = 0;
+        this.monitorHistory = new ArrayList<MonitorHistory>();
+        this.vms = Main.vmsProvisioned.size();
+        this.quarantined = 0;
+    }
        
     public void doMonitoring(){
         try {
@@ -46,7 +56,8 @@ public class Monitor {
             vms = Main.vmsProvisioned.size();
             quarantined = 0;
             
-            currentSessions = null;
+            currentSessions = new int[Main.vmsProvisioned.size()][];
+            currentSessionSum = 0;
             responseTimeAvg = 0;
             
             /*Monitor Vms and Haproxy in parallel */
@@ -64,9 +75,11 @@ public class Monitor {
             Log.printLine2("Haproxy monitoring started");
             monitorVmsThread.join();
             monitorHaproxyThread.join();
+            
             /* monitoring is done */
             Log.printLine2("Monitor", "doMonitoring", "Monitoring is done");
             // return calculated cpu for vms, index 0 is vm index and 1 is its cpu util.
+            // vm index is used in surplus vm selection based on vm cpu utilization
             cpuUtilizationPerVm = monitorVms.getCpuUtilizationPerVm();
             for (double[] cpuUtil : cpuUtilizationPerVm){
                 cpuUtilizationAvg += cpuUtil[1];
@@ -78,23 +91,27 @@ public class Monitor {
             // return calculate current sessions and response time
             
             // for current session, replace vm name with vm id
-            for (int i = 0; i < monitorHaproxy.getCurrentSessions().length; i ++){
+            for (int i = 0; i < monitorHaproxy.getCurrentSessionsPerVm().length; i ++){
                 for (Vm vm : Main.vmsProvisioned){
-                    if (vm.getName().equals(monitorHaproxy.getCurrentSessions()[i][0])){
+                    if (vm.getName().equals(monitorHaproxy.getCurrentSessionsPerVm()[i][0])){
                         currentSessions[i][0] = vm.getIndex();
-                        currentSessions[i][1] = Integer.valueOf(monitorHaproxy.getCurrentSessions()[i][1]);
+                        currentSessions[i][1] = Integer.valueOf(monitorHaproxy.getCurrentSessionsPerVm()[i][1]);
                         break;
                     }
                 }
             }
-
+            
+            currentSessionSum = monitorHaproxy.getCurrentSessionsSum();
+            
+            // set response time avg
             responseTimeAvg = monitorHaproxy.getRespnseTimeAvg();
             
             // write to history
             MonitorHistory monitorHistory = new MonitorHistory(cpuUtilizationAvg, 
                                                                 cpuUtilizationPerVm, 
                                                                 responseTimeAvg, 
-                                                                currentSessions, 
+                                                                currentSessions,
+                                                                currentSessionSum,
                                                                 vms, 
                                                                 quarantined);
             getMonitorHistory().add(monitorHistory);
@@ -124,6 +141,10 @@ public class Monitor {
 
     public int[][] getCurrentSessions() {
         return currentSessions;
+    }
+
+    public int getCurrentSessionSum() {
+        return currentSessionSum;
     }
 
     public double getResponseTimeAvg() {

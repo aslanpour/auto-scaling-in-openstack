@@ -27,13 +27,15 @@ import log.Log;
  */
 public class MonitorHaproxy implements Runnable{
     // vm name and its current sessions
-    private String [][] currentSessions;
+    private String [][] currentSessionsPerVm;
+    private int currentSessionsSum;
     private double respnseTimeAvg;
     
     public void run (){
         Log.printLine3("MonitorHaproxy", "run", "Monitor Haproxy is active");
         try {
-            currentSessions = new String[Main.vmsProvisioned.size()][];
+            currentSessionsPerVm = new String[Main.vmsProvisioned.size()][];
+            currentSessionsSum = 0;
             respnseTimeAvg = 0;
             
             String stats = callAPI();
@@ -118,23 +120,33 @@ public class MonitorHaproxy implements Runnable{
             else if (titles[index].equals(totalTime))
                 indexTotalTime = index;
         }
-        // set current sessionsper vms
-        for (int backendRows = 0; backendRows < backend.length; backendRows++){
-            String name = backend[backendRows][1]; // vm name
-            String sessions = backend[backendRows][indexCurrentSession];// cuurent sessions
+        // set current sessions per vms
+        for (int backendRowsIndex = 0; backendRowsIndex < backend.length; backendRowsIndex++){
+            String name = backend[backendRowsIndex][1]; // vm name
+            String sessions = backend[backendRowsIndex][indexCurrentSession];// cuurent sessions
 
-            currentSessions[backendRows] = new String[]{name, sessions};
-            Log.printLine4("MonitorHaproxy", "parse", "Session No. name=" + sessions);
+            currentSessionsPerVm[backendRowsIndex] = new String[]{name, sessions};
+            Log.printLine4("MonitorHaproxy", "parse", "Session No. name=" + name + " session=" + sessions);
         }
         
         //set total response time
         respnseTimeAvg = Double.valueOf(backendTotal[indexTotalTime]);
+        // set sum current sessions
+        currentSessionsSum = Integer.valueOf(backendTotal[indexCurrentSession]);
+        
+        Log.printLine4("monitorHaproxy", "parse", "Average RT=" + respnseTimeAvg);
+        Log.printLine4("monitorHaproxy", "parse", "Sum Current Sessions =" + currentSessionsSum);
     }
 
-    public String[][] getCurrentSessions() {
-        return currentSessions;
+    public String[][] getCurrentSessionsPerVm() {
+        return currentSessionsPerVm;
     }
 
+    public int getCurrentSessionsSum() {
+        return currentSessionsSum;
+    }
+
+    
     public double getRespnseTimeAvg() {
         return respnseTimeAvg;
     }

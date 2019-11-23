@@ -39,12 +39,14 @@ import org.apache.http.impl.client.HttpClients;
 public class ExecutorSimple extends Executor{
 
     public ExecutorSimple(DefaultSettings.SurplusVMSelectionPolicy policy, 
+                            boolean coolDownEnabled,
                             int cooldown, 
-                            int maxAllowedScaleUp, 
+                            int maxAllowedWebServer,
+                            int minAllowedWebServer,
                             int flavorID,
                             int[] alreadyAllocatedIPs) {
         
-        super(policy, cooldown, maxAllowedScaleUp, flavorID, alreadyAllocatedIPs);
+        super(policy, coolDownEnabled, cooldown, maxAllowedWebServer, minAllowedWebServer, flavorID, alreadyAllocatedIPs);
         
     }
     
@@ -64,16 +66,16 @@ public class ExecutorSimple extends Executor{
         //scale up
         switch (decision) {
             case SCALE_UP:
-                if (getRemainedCooldown() <= 0){// smaller than will not happen
-                    if (Main.vmsProvisioned.size() >= getMaxAllowedScaleUp())// bigger than will not happen
+                if (getRemainedCooldown() <= 0){// just in case (smaller than will not happen)
+                    if (Main.vmsProvisioned.size() >= getMaxAllowedWebServer())// bigger than will not happen
                         setAction(DefaultSettings.Action.SCALE_UP_BANNED_BY_MAX_ALLOWED_VM);
                     else{
                         // perform scale up
                         setAction(DefaultSettings.Action.SCALE_UP);
                         //first check step size in connection to max allowed vm
-                        if ((Main.vmsProvisioned.size() + stepSize) > getMaxAllowedScaleUp()){
+                        if ((Main.vmsProvisioned.size() + stepSize) > getMaxAllowedWebServer()){
                             //reduce stepsize
-                            stepSize = getMaxAllowedScaleUp() - Main.vmsProvisioned.size();
+                            stepSize = getMaxAllowedWebServer()- Main.vmsProvisioned.size();
                             setAction(DefaultSettings.Action.SCALE_UP_REDUCED_BY_MAX_ALLOWED_VM);
                         }
                          
@@ -82,18 +84,19 @@ public class ExecutorSimple extends Executor{
 
                         setProvisioned(stepSize);
                         
-                        setRemainedCooldown(getCooldown());
+                        if (isCooldownEnabled())
+                            setRemainedCooldown(getCooldown());
                     }
                 }else{
                     setAction(DefaultSettings.Action.SCALE_UP_BANNED_BY_COOLDOWN);
                 }
                 break;
             case SCALE_DOWN:
-                if (Main.vmsProvisioned.size() > DefaultSettings.MIN_NUMBER_OF_WEB_SERVER) {
+                if (Main.vmsProvisioned.size() > getMinAllowedWebServer()) {
                     setAction(DefaultSettings.Action.SCALE_DOWN);
                     
-                    if ((Main.vmsProvisioned.size() - stepSize) < DefaultSettings.MIN_NUMBER_OF_WEB_SERVER){
-                        stepSize = Main.vmsProvisioned.size() - DefaultSettings.MIN_NUMBER_OF_WEB_SERVER;
+                    if ((Main.vmsProvisioned.size() - stepSize) < getMinAllowedWebServer()){
+                        stepSize = Main.vmsProvisioned.size() - getMinAllowedWebServer();
                         setAction(DefaultSettings.Action.SCALE_DOWN_REDUCED_BY_MAX_ALLOWED);
                     }
                     //perform scale down
@@ -158,6 +161,7 @@ public class ExecutorSimple extends Executor{
                     + "\", \"max_count\": 1, "
                     + "\"networks\": [{\"fixed_ip\": \""+ ip + "\", "
                         + "\"uuid\": \"" + DefaultSettings.OS_NEUTRON_NETWORK_UUID_PRIVATE + "\"}],"
+                        //network without setting the ip
     //                + "\"networks\": [{\"uuid\":\"e291c471-deca-4dc6-a593-f2e089bb6d86\"}], "
                     + "\"security_groups\": [{\"name\": \"" + DefaultSettings.OS_NEUTRON_SECURITYGROUP_NAME + "\"}], "
                     + "\"key_name\": \"" + DefaultSettings.OS_COMPUTE_KEYPAIRS_NAME + "\"}}";
@@ -173,7 +177,7 @@ public class ExecutorSimple extends Executor{
 
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 if (httpResponse.getStatusLine().getStatusCode() != 202)
-                    System.out.println("Server was not created.");
+                    System.out.println("Error - Server was not created.");
 
                 Header[] responseHeader = httpResponse.getAllHeaders(); 
                 String headerValue = responseHeader[1].getValue();
@@ -183,7 +187,7 @@ public class ExecutorSimple extends Executor{
                 httpPost.releaseConnection();
                 httpPost.reset();
 
-                //reconfigure haproxy, it needs thread???
+                //reconfigure haproxy
                 haproxyReconfigurationLocally("ADD", vmName, ip);
                 
                 // add to vmsprovisioned
@@ -205,6 +209,10 @@ public class ExecutorSimple extends Executor{
         }
     }
     
+    /**
+     * 
+     * @param stepSize 
+     */
     @Override
     public void performScaleDown(int stepSize){
         try {
@@ -333,54 +341,67 @@ public class ExecutorSimple extends Executor{
      * @param serverIP 
      */
     @Override
-    public void haproxyReconfigurationLocally(String addRemove, String serverName, String serverIP) {
-        try {
-            //Script Inputs: COMMAND {ADD or REMOVE}, SERVER_NAME, SERVER_IP
-            ////sudo bash /home/ubuntu/haproxy_reconfiguration.sh PARA1 PARA2 PARA3
-            String command[]= {"sudo", 
-                "bash", 
-                DefaultSettings.FILE_LOCATION_HAPROXY_RECONFIGURATION, 
-                addRemove, 
-                serverName, 
-                serverIP};
-            
-            ProcessBuilder builder = new ProcessBuilder(command);
+    public void haproxyReconfigurationLocally(final String addRemove, 
+                                            final String serverName, 
+                                            final String serverIP) {
+        // Create a thread
+        Thread haproxyReconfiguration = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //Script Inputs: COMMAND {ADD or REMOVE}, SERVER_NAME, SERVER_IP
+                    ////sudo bash /home/ubuntu/haproxy_reconfiguration.sh PARA1 PARA2 PARA3
+                    String command[]= {"sudo", 
+                        "bash", 
+                        DefaultSettings.FILE_LOCATION_HAPROXY_RECONFIGURATION, 
+                        addRemove, 
+                        serverName, 
+                        serverIP};
 
-            builder.redirectErrorStream(true); // redirect error stream to
-            // output stream
-            builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                    ProcessBuilder builder = new ProcessBuilder(command);
 
-            Process p = null;
+                    builder.redirectErrorStream(true); // redirect error stream to
+                    // output stream
+                    builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
-            try {
-                p = builder.start();
-                StringBuilder output = new StringBuilder();
+                    Process p = null;
 
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(p.getInputStream()));
+                    try {
+                        p = builder.start();
+                        StringBuilder output = new StringBuilder();
 
-		String line;
-		while ((line = reader.readLine()) != null) {
-			output.append(line + "\n");
-		}
+                        BufferedReader reader = new BufferedReader(
+                                        new InputStreamReader(p.getInputStream()));
 
-		int exitVal = p.waitFor();
-		if (exitVal == 0) {
-			Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", 
-                                "Haproxy " + addRemove + "ed" + " " + serverName + " " + serverIP);
-			System.out.println(output);
-			System.exit(0);
-		} else {
-			Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "Updating Error");
-		}
-            } catch (IOException e) {
-                    System.out.println(e);
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                                output.append(line + "\n");
+                        }
+
+                        int exitVal = p.waitFor();
+                        if (exitVal == 0) {
+                                Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", 
+                                        "Haproxy " + addRemove + "ed" + " " + serverName + " " + serverIP);
+                                System.out.println(output);
+                                System.exit(0);
+                        } else {
+                                Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "Updating Error");
+                        }
+                    } catch (IOException e) {
+                            System.out.println(e);
+                    }
+                    p.waitFor();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
             }
-            p.waitFor();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        
+        //Start the thread
+        haproxyReconfiguration.start();
+        
     }
     
     /**

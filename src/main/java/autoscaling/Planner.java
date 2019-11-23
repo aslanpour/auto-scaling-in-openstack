@@ -25,7 +25,7 @@ public abstract class Planner {
         this.decision = DefaultSettings.PlannerDecision.DO_NOTHING;
         this.stepSize = stepSize;
         
-        this.historyList = new ArrayList<>();
+        this.historyList = new ArrayList<PlannerHistory>();
     }
     
     

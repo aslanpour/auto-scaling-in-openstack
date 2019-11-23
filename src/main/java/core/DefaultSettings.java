@@ -87,7 +87,8 @@ public class DefaultSettings {
         DO_NOTHING
     }
     //Executor
-    public static final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; //?????
+    public static final SurplusVMSelectionPolicy surplusVMSelectionPolicy = 
+                                                SurplusVMSelectionPolicy.THE_OLDEST; //?????
     public enum SurplusVMSelectionPolicy{
         /* when performing scale down decisions, it is neccessary to choose a policy for selecting surplus VM
             Implemented policies are:*/
@@ -99,9 +100,10 @@ public class DefaultSettings {
         COST_AWARE_SIMPLE, // selects the the most cost-efficient VM 
         COST_AWARE_PROFESSIONAL; // selects the most cost-and-load-efficient VM
     }
+    public static boolean COOLDOWN_ENABLED = false;
     public static int COOLDOWN = 0;
-    public static int MAX_ALLOWED_SCALE_UP = 10;
-    public static int MIN_NUMBER_OF_WEB_SERVER = 1;
+    public static int MAX_ALLOWED_WEB_SERVER = 10;
+    public static int MIN_ALLOWED_WEB_SERVER = 1;
     // Table of flavors
     public static final String[][] FLAVOR_TABLE = new String[][]{
         //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
