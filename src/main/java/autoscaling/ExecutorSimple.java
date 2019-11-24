@@ -131,7 +131,7 @@ public class ExecutorSimple extends Executor{
     @Override
     public void performScaleUp(int stepSize, int flavorID){
         try{
-            Log.printLine3("ExecutorSimple", "performScaleUp", "is running");
+            Log.printLine3("ExecutorSimple", "performScaleUp", "is running...");
             //OpenStack Authentication
             String OS_TOKEN = authentication();
             
@@ -350,6 +350,7 @@ public class ExecutorSimple extends Executor{
             @Override
             public void run() {
                 try {
+                    Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "HAProxy reconfiguration started . . .");
                     //Script Inputs: COMMAND {ADD or REMOVE}, SERVER_NAME, SERVER_IP
                     ////sudo bash /home/ubuntu/haproxy_reconfiguration.sh PARA1 PARA2 PARA3
                     String command[]= {"sudo", 
@@ -391,8 +392,8 @@ public class ExecutorSimple extends Executor{
                     } catch (IOException e) {
                             System.out.println(e);
                     }
-                    p.waitFor();
-
+//                    p.waitFor(); //???
+                    
                 } catch (InterruptedException e) {
                     e.printStackTrace();
             }

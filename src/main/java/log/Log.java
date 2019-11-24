@@ -36,38 +36,38 @@ public class Log {
     }
     
     public static void printLine1(String log){
-        System.out.println(getTimestampStr() + "  " + log);
+        System.out.println(getTimestampStr() + log);
     }
     
     public static void printLine2(String log){
-        System.out.println(getTimestampStr() + "      " + log);
+        System.out.println(getTimestampStr() + log);
     }
     
     public static void printLine3(String log){
-        System.out.println(getTimestampStr() + "          " + log);
+        System.out.println(getTimestampStr() + log);
     }
     
     public static void printLine4(String log){
-        System.out.println(getTimestampStr() + "                  " + log);
+        System.out.println(getTimestampStr() + log);
     }
     
     public static void printLine1(String className, String methodName, String command){
-        System.out.println(getTimestampStr() + "  " + 
+        System.out.println(getTimestampStr() + 
                 "---#" + className + "/" + methodName + "#---" + command);
     }
     
     public static void printLine2(String className, String methodName, String command){
-        System.out.println(getTimestampStr() + "      " + 
+        System.out.println(getTimestampStr() +
                 "---#" + className + "/" + methodName + "#---" + command);
     }
     
     public static void printLine3(String className, String methodName, String command){
-        System.out.println(getTimestampStr() + "          " 
-                + "---#" + className + "/" + methodName + "#---" + command);
+        System.out.println(getTimestampStr() +
+                "---#" + className + "/" + methodName + "#---" + command);
     }
     
     public static void printLine4(String className, String methodName, String command){
-        System.out.println(getTimestampStr() + "                  " + 
+        System.out.println(getTimestampStr() + 
                 "---#" + className + "/" + methodName + "#---" + command);
     }
 }
