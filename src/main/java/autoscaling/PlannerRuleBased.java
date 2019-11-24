@@ -40,7 +40,7 @@ public class PlannerRuleBased extends Planner{
     
     @Override
     public void doPlanning(){
-        Log.printLine2("PlannerRuleBased", "doMonitoring", "Planner started (rule= " 
+        Log.printLine2("PlannerRuleBased", "doMonitoring", "Planner started... (rule= " 
                 + rule.name().toString() + ")");
         /* Planner's outputs - initialing output parameters */
         decision = DefaultSettings.PlannerDecision.DO_NOTHING;

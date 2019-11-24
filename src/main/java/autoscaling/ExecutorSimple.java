@@ -131,7 +131,7 @@ public class ExecutorSimple extends Executor{
     @Override
     public void performScaleUp(int stepSize, int flavorID){
         try{
-            Log.printLine3("ExecutorSimple", "performScaleUp", "is running...");
+            Log.printLine3("ExecutorSimple", "performScaleUp", "perform scale up is running...");
             //OpenStack Authentication
             String OS_TOKEN = authentication();
             
@@ -168,8 +168,6 @@ public class ExecutorSimple extends Executor{
 
                 StringEntity entity = new StringEntity(json);
                 httpPost.setEntity(entity);
-                
-                
 
                 httpPost.setHeader("Accept", "application/json");
                 httpPost.setHeader("Content-type", "application/json");
@@ -178,7 +176,8 @@ public class ExecutorSimple extends Executor{
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 if (httpResponse.getStatusLine().getStatusCode() != 202)
                     System.out.println("Error - Server was not created.");
-
+                else
+                    Log.printLine1("HTTPPost was successful");
                 Header[] responseHeader = httpResponse.getAllHeaders(); 
                 String headerValue = responseHeader[1].getValue();
                 String []headerValueSplitter = headerValue.split("/");
@@ -187,6 +186,9 @@ public class ExecutorSimple extends Executor{
                 httpPost.releaseConnection();
                 httpPost.reset();
 
+                Log.printLine3("ExecutorSimple", "performScaleUp", "New Vm created:");
+                Log.printLine4(vmName + " " + ip);
+                
                 //reconfigure haproxy
                 haproxyReconfigurationLocally("ADD", vmName, ip);
                 
@@ -196,16 +198,15 @@ public class ExecutorSimple extends Executor{
                                 "", String.valueOf(flavorID), "runnung", "nova", Log.getTimestamp());
                                 
                 Main.vmsProvisioned.add(vm);
-                
-                Log.printLine3("ExecutorSimple", "performScaleUp", "New Vm created:");
-                Log.printLine4(vmName + " " + ip);
             }
         } catch (ClientProtocolException e) {
+                System.out.println("error-performscaleup1");
                 e.printStackTrace();
         } catch (IOException e) {
+                System.out.println("error-performscaleup2");
                 e.printStackTrace();
         } catch (URISyntaxException ex){
-            
+                System.out.println("error-performscaleup3");
         }
     }
     
@@ -250,6 +251,9 @@ public class ExecutorSimple extends Executor{
                 httpDelete.releaseConnection();
                 httpDelete.reset();
 
+                Log.printLine3("ExecutorSimple", "performScaleDown", "is done");
+                Log.printLine4(vm.getName() + " " + vm.getPrivateIP() + " destroyed");
+                
                 // update haproxy, needsthread ???
                 haproxyReconfigurationLocally("REMOVE", vm.getName(), vm.getPrivateIP());
                 
@@ -266,9 +270,6 @@ public class ExecutorSimple extends Executor{
                 
                 // update SSH known Hosts
                 updateSshKnownHosts(vm.getPrivateIP());
-                
-                Log.printLine3("ExecutorSimple", "performScaleDown", "is done");
-                Log.printLine4(vm.getName() + " " + vm.getPrivateIP() + " destroyed");
             }
             
             
@@ -345,65 +346,56 @@ public class ExecutorSimple extends Executor{
     public void haproxyReconfigurationLocally(final String addRemove, 
                                             final String serverName, 
                                             final String serverIP) {
-        // Create a thread
-        Thread haproxyReconfiguration = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "HAProxy reconfiguration started . . .");
-                    //Script Inputs: COMMAND {ADD or REMOVE}, SERVER_NAME, SERVER_IP
-                    ////sudo bash /home/ubuntu/haproxy_reconfiguration.sh PARA1 PARA2 PARA3
-                    String command[]= {"sudo", 
-                        "bash", 
-                        DefaultSettings.FILE_LOCATION_HAPROXY_RECONFIGURATION, 
-                        addRemove, 
-                        serverName, 
-                        serverIP};
+        try {
+            Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "HAProxy reconfiguration started . . .");
+            //Script Inputs: COMMAND {ADD or REMOVE}, SERVER_NAME, SERVER_IP
+            ////sudo bash /home/ubuntu/haproxy_reconfiguration.sh PARA1 PARA2 PARA3
+            String command[]= {"sudo", 
+                "bash", 
+                DefaultSettings.FILE_LOCATION_HAPROXY_RECONFIGURATION, 
+                addRemove, 
+                serverName, 
+                serverIP};
 
-                    ProcessBuilder builder = new ProcessBuilder(command);
+            ProcessBuilder builder = new ProcessBuilder(command);
 
-                    builder.redirectErrorStream(true); // redirect error stream to
-                    // output stream
-                    builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            builder.redirectErrorStream(true); // redirect error stream to
+            // output stream
+            builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
-                    Process p = null;
+            Process p = null;
 
-                    try {
-                        p = builder.start();
-                        StringBuilder output = new StringBuilder();
+            try {
+                p = builder.start();
+                StringBuilder output = new StringBuilder();
 
-                        BufferedReader reader = new BufferedReader(
-                                        new InputStreamReader(p.getInputStream()));
+                BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(p.getInputStream()));
 
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                                output.append(line + "\n");
-                        }
-
-                        int exitVal = p.waitFor();
-                        if (exitVal == 0) {
-                                Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", 
-                                        "Haproxy " + addRemove + "ed" + " " + serverName + " " + serverIP);
-                                System.out.println(output);
-                                System.exit(0);
-                        } else {
-                                Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "Updating Error");
-                        }
-                    } catch (IOException e) {
-                            System.out.println(e);
-                    }
+                String line;
+                while ((line = reader.readLine()) != null) {
+                        output.append(line + "\n");
+                }
+                
+                int exitVal = p.waitFor();
+                if (exitVal == 0) {
+                        Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", 
+                                "Haproxy " + addRemove + "ed" + " " + serverName + " " + serverIP);
+//                        System.out.println(output);
+//                        System.exit(0);
+                } else {
+                        Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "Updating Error");
+                }
+            } catch (IOException e) {
+                    System.out.println(e);
+            }
 //                    p.waitFor(); //???
-                    
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-            }
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        
-        //Start the thread
-        haproxyReconfiguration.start();
-        
+
+        } catch (InterruptedException e) {
+            System.out.println("error-haproxyreconfiguration");
+            e.printStackTrace();
+        }
+        Log.printLine1("haproxy reconfiguration is done");
     }
     
     /**
@@ -452,7 +444,7 @@ public class ExecutorSimple extends Executor{
 		if (exitVal == 0) {
 			System.out.println("Success!");
 			System.out.println(output);
-			System.exit(0);
+//			System.exit(0);
 		} else {
 			//abnormal...
 		}

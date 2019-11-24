@@ -41,7 +41,7 @@ public class Analyzer {
     * Analyzing effective parameters
     */
     public void doAnalysis(){
-        Log.printLine2("Analyzer", "doAnalysis", "Analyzing phase started");
+        Log.printLine2("Analyzer", "doAnalysis", "Analyzing phase started...");
 /* initialing Analysis Parameters */
         
         /* calculation of analysis parameters */

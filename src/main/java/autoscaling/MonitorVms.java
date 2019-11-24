@@ -35,7 +35,7 @@ public class MonitorVms implements Runnable{
             i++;    
         }
         //run threads
-        Log.printLine3("MonitorVms", "run", "Start " + Main.vmsProvisioned.size() + " threads");
+        Log.printLine3("MonitorVms", "run", "Starting " + Main.vmsProvisioned.size() + " threads");
         for (i = 0; i <thread.length; i++){
            thread[i].start();
         }

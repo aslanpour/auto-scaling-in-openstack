@@ -66,7 +66,8 @@ public class Main {
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
-                Log.printLine1("Main", "main", "Sleeping until the next monitoring interval");
+                Log.printLine1("Main", "main", "Sleeping until the next monitoring interval ("
+                                + DefaultSettings.MONITORING_INTERVAL /1000 + " sec)");
                 Thread.sleep(DefaultSettings.MONITORING_INTERVAL);
                 
                 // call monitor
@@ -80,9 +81,9 @@ public class Main {
                 timeToRunScaler -= DefaultSettings.MONITORING_INTERVAL;
                
                 if (timeToRunScaler > 0)
-                    Log.printLine1("Main", "main", "Time to scaling: " + (timeToRunScaler / 1000) + " sec");
+                    Log.printLine1("Main", "main", " Remained time to scaling: " + (timeToRunScaler / 1000) + " sec");
                 else if (timeToRunScaler <= 0){
-                    Log.printLine2("Main", "main", "Full autoscaling started");
+                    Log.printLine2("Main", "main", "Full autoscaling started...");
                     // call analyzer
                     analyzer.doAnalysis();
                     // call planner
@@ -132,21 +133,8 @@ public class Main {
     }
 
     static private void terminator(){
-        Thread terminatorThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getExecutor().performScaleDown(vmsProvisioned.size());
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        
-        terminatorThread.start();
-        try {
-            terminatorThread.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        Log.printLine1("Main", "terminator", "Terminator started...");
+        getExecutor().performScaleDown(vmsProvisioned.size());
     }
     public static Monitor getMonitor() {
         return monitor;

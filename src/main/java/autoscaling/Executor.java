@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import log.ExecutorHistory;
+import log.Log;
 
 /**
  *
@@ -114,10 +115,11 @@ public abstract class Executor {
      * @param ip 
      */
     public void updateSshKnownHosts (final String ip){ 
-        
+        Log.printLine1("Executor", "updateSshKnonwnHosts", "update known hosts for " + ip);
         Thread updateSshKnownHosts = new Thread(new Runnable() {
             @Override
             public void run() {
+                
                 try {
                     Process p = null;
 
@@ -136,7 +138,7 @@ public abstract class Executor {
                     }
                     System.out.println(output);
                     p = null;
-
+                    
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {

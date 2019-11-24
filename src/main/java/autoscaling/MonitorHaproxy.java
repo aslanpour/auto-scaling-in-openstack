@@ -126,7 +126,7 @@ public class MonitorHaproxy implements Runnable{
             String sessions = backend[backendRowsIndex][indexCurrentSession];// cuurent sessions
 
             currentSessionsPerVm[backendRowsIndex] = new String[]{name, sessions};
-            Log.printLine4("MonitorHaproxy", "parse", "Session No. name=" + name + " session=" + sessions);
+            Log.printLine4("MonitorHaproxy", "parse", "Session No. name= " + name + " session= " + sessions);
         }
         
         //set total response time

@@ -50,7 +50,7 @@ public class Monitor {
        
     public void doMonitoring(){
         try {
-            Log.printLine1("Monitor", "doMonitoring", "Monitoring is active");
+            Log.printLine1("Monitor", "doMonitoring", "Monitoring is active...");
             cpuUtilizationAvg = 0;
             cpuUtilizationPerVm = new double[Main.vmsProvisioned.size()][];
             vms = Main.vmsProvisioned.size();
@@ -72,7 +72,7 @@ public class Monitor {
             Thread monitorHaproxyThread = new Thread(monitorHaproxy);
             monitorHaproxyThread.setDaemon(true);
             monitorHaproxyThread.start();
-            Log.printLine2("Haproxy monitoring started");
+            Log.printLine2("Haproxy monitoring thread started");
             monitorVmsThread.join();
             monitorHaproxyThread.join();
             
@@ -96,6 +96,7 @@ public class Monitor {
                     if (vm.getName().equals(monitorHaproxy.getCurrentSessionsPerVm()[i][0])){
                         currentSessions[i][0] = vm.getIndex();
                         currentSessions[i][1] = Integer.valueOf(monitorHaproxy.getCurrentSessionsPerVm()[i][1]);
+                        Log.printLine1("current sessions: " + vm.getName() + " " + currentSessions[i][1]);
                         break;
                     }
                 }
@@ -116,8 +117,8 @@ public class Monitor {
                                                                 quarantined);
             getMonitorHistory().add(monitorHistory);
             Log.printLine2("Monitored date was saved into the history as follow:");
-            Log.printLine3("CPU util. avg= " + cpuUtilizationAvg + "\n  ResponseTime avg=" + responseTimeAvg
-                            + "\n  Vms No.= " + vms + "\n  quarantineed Vms No.=" + quarantined);
+            Log.printLine3("CPU util. avg= " + cpuUtilizationAvg + "\n  ResponseTime avg= " + responseTimeAvg
+                            + "\n  Vms No.= " + vms + "\n  quarantineed Vms No.= " + quarantined);
         } catch (InterruptedException ex) {
             Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
         }
