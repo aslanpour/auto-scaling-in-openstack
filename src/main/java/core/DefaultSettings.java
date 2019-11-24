@@ -10,8 +10,11 @@ package core;
  * @author aslanpour
  */
 public class DefaultSettings {
-    //File to collect CPU utiliation, located on web servers.
-    public static final String FILE_LOCATION_CPU_UTILIZATION = "/home/ubuntu/get_cpu_idle.sh";
+    //File to collect CPU utiliation, located on web servers. 
+    //(1, 2,3, 10, 30, 60)
+    private static String CPU_MONITOR_DURATION = "3"; // second
+    public static final String FILE_LOCATION_CPU_UTILIZATION = "/home/ubuntu/get_cpu_idle"
+            + CPU_MONITOR_DURATION + ".sh";
     
     // file to update haproxy
     public static final String FILE_LOCATION_HAPROXY_RECONFIGURATION = "/home/ubuntu/haproxy_reconfiguration.sh";
