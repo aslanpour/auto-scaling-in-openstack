@@ -327,6 +327,7 @@ public class ExecutorSimple extends Executor{
             httpPost.reset();
             
             // The authentication code is returned in the HTTP header
+            Log.printLine3("Token was created.");
             return tokenValue;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ExecutorSimple.class.getName()).log(Level.SEVERE, null, ex);

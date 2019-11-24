@@ -11,7 +11,6 @@ import autoscaling.ExecutorSimple;
 import autoscaling.Monitor;
 import autoscaling.Planner;
 import autoscaling.PlannerRuleBased;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

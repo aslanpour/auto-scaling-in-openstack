@@ -42,19 +42,17 @@ public class ReadWriteCSV {
                     String[] rowStr = line.split(",");
                     
                     ArrayList<Double> row = new ArrayList<Double>();
-                    for (int i =0; i < rowStr.length;i++){
-                        row.add(Double.valueOf(rowStr[i]));
+                    for (String rowStr1 : rowStr) {
+                        row.add(Double.valueOf(rowStr1));
                     }
                     
                     dataList.add(row);
                 } 
                 
             } catch (IOException e) {
-                e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
             System.out.println(e);
-            e.printStackTrace(); 
         }
         System.out.println("The file: " + file + " was read");
         return dataList;
@@ -69,33 +67,31 @@ public class ReadWriteCSV {
      * @throws IOException 
      */
     public static void writeCSV( double[] data, String filePath,String fileName) throws IOException{
-        FileWriter csvWriter = new FileWriter(filePath + fileName);
-                
-        for (int i = 0; i < data.length; i++) {
-           csvWriter.append(data[i] + "\n");
+        try (FileWriter csvWriter = new FileWriter(filePath + fileName)) {
+            for (int i = 0; i < data.length; i++) {
+                csvWriter.append(data[i] + "\n");
+            }
+            
+            csvWriter.flush();
         }
-        
-        csvWriter.flush();
-        csvWriter.close();
     }
     
     public static void writeCSV(ArrayList dataList, String filePath, String fileName) throws IOException{
-        FileWriter csvWriter = new FileWriter(filePath + fileName);
+        try (FileWriter csvWriter = new FileWriter(filePath + fileName)) {
+            for (int i = 0; i < dataList.size(); i++) {
+                ArrayList<Double> row = (ArrayList<Double>)dataList.get(i);
                 
-        for (int i = 0; i < dataList.size(); i++) {
-            ArrayList<Double> row = (ArrayList<Double>)dataList.get(i);
+                for (int j = 0; j< row.size(); j++){
+                    if (j <row.size() - 1)
+                        csvWriter.append(row.get(j) + ",");
+                    else
+                        csvWriter.append(String.valueOf(row.get(j)));
+                }
+                csvWriter.append("\n");
+            }
             
-           for (int j = 0; j< row.size(); j++){
-               if (j <row.size() - 1)
-                csvWriter.append(row.get(j) + ",");
-               else
-                   csvWriter.append(String.valueOf(row.get(j)));
-           }
-           csvWriter.append("\n");
+            csvWriter.flush();
         }
-        
-        csvWriter.flush();
-        csvWriter.close();
     }
     
     /**
@@ -107,15 +103,15 @@ public class ReadWriteCSV {
      * @throws IOException 
      */
     public static void writeCSV(double[] data, String filePath, String fileName, String lable) throws IOException{
-        FileWriter csvWriter = new FileWriter(filePath + fileName);
-        csvWriter.append(lable + "\n");
-        
-        for (int i = 0; i < data.length; i++) {
-           csvWriter.append(data[i] + "\n");
+        try (FileWriter csvWriter = new FileWriter(filePath + fileName)) {
+            csvWriter.append(lable + "\n");
+            
+            for (int i = 0; i < data.length; i++) {
+                csvWriter.append(data[i] + "\n");
+            }
+            
+            csvWriter.flush();
         }
-        
-        csvWriter.flush();
-        csvWriter.close();
     }
     
     /**

@@ -33,12 +33,11 @@ public class DefaultSettings {
     public static final String WEB_SERVER_USERNAME = "ubuntu";
     // the ID of web server snapshot
     // small snapshot:    a5262b74-9f39-4c3c-8eb7-6cf4abba913c
-    // medium snapshot:   
+    // medium snapshot:   ae5f8e0c-41b4-4a79-a840-803d4ad99ee6
     public static final String OS_COMPUTE_IMAGE_ID = "a5262b74-9f39-4c3c-8eb7-6cf4abba913c";
     public static final String OS_NEUTRON_NETWORK_UUID_PRIVATE = "e291c471-deca-4dc6-a593-f2e089bb6d86";
     public static final String OS_NEUTRON_SECURITYGROUP_NAME = "AutoscalingSecurityGroup";
     public static final String OS_COMPUTE_KEYPAIRS_NAME = "mykeypair"; 
-    public static final double VM_PRICE_UNIT_PER_HOUR= 0.04;
     public static final String OS_NOVA_AVAILIBILITY_ZONE = "nova";
     
     /** Auto-scaling **/
@@ -62,7 +61,7 @@ public class DefaultSettings {
         
     }
     //planner
-    public static ScalingRule rule = ScalingRule.HYBRID;
+    public static ScalingRule rule = ScalingRule.RESOURCE_AWARE;
     public enum ScalingRule {
         /* please cite: https://ieeexplore.ieee.org/abstract/document/7498443/ */
         RESOURCE_AWARE, // Resource aware, - Decision-making by Resource utilization rule (Amazon default policy)
@@ -102,17 +101,18 @@ public class DefaultSettings {
     }
     public static boolean COOLDOWN_ENABLED = false;
     public static int COOLDOWN = 0;
-    public static int MAX_ALLOWED_WEB_SERVER = 10;
+    public static int MAX_ALLOWED_WEB_SERVER = 15;
     public static int MIN_ALLOWED_WEB_SERVER = 1;
     // Table of flavors
     public static final String[][] FLAVOR_TABLE = new String[][]{
         //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
+        {"2", "m1.small", "1", "2", "20", "0.02"},
         {"3", "m1.medium", "2", "4", "40", "0.04"}
     };
     
     //ip net: 10.10.0.0/24 
     public static final String netIP = "10.10.0.";
-    public static int[] alreadyAllocatedIPs = new int[]{3, 8, 9, 12};
+    public static int[] alreadyAllocatedIPs = new int[]{7, 8, 9, 12, 39};
     
     public static final String EXECUTOR_SCALING_FLAVOR_ID = FLAVOR_TABLE[0][0];
     public static final boolean VM_QUARANTINING = false;
