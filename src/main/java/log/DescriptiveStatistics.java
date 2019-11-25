@@ -34,8 +34,15 @@ public class DescriptiveStatistics {
         double skewness = descriptiveStat.getSkewness();
         double kurtosis = descriptiveStat.getKurtosis();
         double median = descriptiveStat.getPercentile(50);
+        double percentile75 = descriptiveStat.getPercentile(75);
+        double percentile80 = descriptiveStat.getPercentile(80);
+        double percentile85 = descriptiveStat.getPercentile(85);
+        double percentile90 = descriptiveStat.getPercentile(90);
+        double percentile95 = descriptiveStat.getPercentile(95);
         double percentile99 = descriptiveStat.getPercentile(99);
-        
+        double percentile99_9 = descriptiveStat.getPercentile(99.9);
+        double percentile99_99 = descriptiveStat.getPercentile(99.99);
+        double percentile100 = descriptiveStat.getPercentile(100);
         
         System.out.println("Descriptive Statistics Results: \n");
         Log.printLine3(parameterName + "\n" +
@@ -49,7 +56,12 @@ public class DescriptiveStatistics {
                             "\nSkewness: " + skewness + 
                             "\nKurtosis: " + kurtosis + 
                             "\nMedian: " + median +
-                            "\n90th Percentile: " + percentile99);
+                            "\nPercentile: 50th=" + median
+                            + " 75th=" + percentile75 + " 80th=" + percentile80
+                            + " 85th=" + percentile85 + " 90th=" + percentile90
+                            + " 95th=" + percentile95 + " 99th=" + percentile99
+                            + " 99.9th=" + percentile99_9 + " 99.99th=" + percentile99_99
+                            + " 100th=" + percentile100);
     }
     
     /**
