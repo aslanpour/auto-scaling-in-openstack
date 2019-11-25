@@ -58,12 +58,12 @@ public class Log {
     
     public static void printLine1(String className, String methodName, String command){
         System.out.println(getTimeStr() + 
-                "---#" + className + "/" + methodName + "#---" + command);
+                "#" + className + "/" + methodName + "#---" + command);
     }
     
     public static void printLine2(String className, String methodName, String command){
         System.out.println(getTimeStr() +
-                "---#" + className + "/" + methodName + "#---" + command);
+                "#" + className + "/" + methodName + "#---" + command);
     }
     
     public static void printLine3(String className, String methodName, String command){

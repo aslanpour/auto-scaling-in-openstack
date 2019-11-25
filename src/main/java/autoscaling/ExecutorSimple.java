@@ -178,6 +178,7 @@ public class ExecutorSimple extends Executor{
                     System.out.println("Error - Server was not created.");
                 else
                     Log.printLine1("HTTPPost was successful");
+                
                 Header[] responseHeader = httpResponse.getAllHeaders(); 
                 String headerValue = responseHeader[1].getValue();
                 String []headerValueSplitter = headerValue.split("/");
