@@ -66,8 +66,9 @@ public class Main {
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
-                Log.printLine1("Main", "main", "Sleeping until the next monitoring interval ("
-                                + DefaultSettings.MONITORING_INTERVAL /1000 + " sec)");
+                Log.printLine1("Main", "main", "Sleeping monitoring ("
+                                + DefaultSettings.MONITORING_INTERVAL /1000 + " sec)"
+                                + " Scaling (" + DefaultSettings.SCALING_INTERVAL/1000 + " sec)");
                 Thread.sleep(DefaultSettings.MONITORING_INTERVAL);
                 
                 // call monitor
@@ -101,13 +102,14 @@ public class Main {
         // destroy running vms
         terminator();
         
-        
+        // print results to console
+        SaveResults.printToConsole();
         // print logs to CSV file
         Log.printLine1("Main", "main", "Printing results . . .");
-        SaveResults.saveMonitorHistory(getMonitor().getMonitorHistory());
-        SaveResults.saveAnalyzerHistory(getAnalyzer().getHistoryList());
-        SaveResults.savePlannerHistory(getPlanner().getHistoryList());
-        SaveResults.saveExecutorHistory(getExecutor().getHistoryList());
+        SaveResults.saveMonitorHistory(getMonitor().getMonitorHistory(),"");
+        SaveResults.saveAnalyzerHistory(getAnalyzer().getHistoryList(),"");
+        SaveResults.savePlannerHistory(getPlanner().getHistoryList(), "");
+        SaveResults.saveExecutorHistory(getExecutor().getHistoryList(), "");
         // print results to console
         
     }
@@ -123,13 +125,12 @@ public class Main {
      * @return 
      */
     private static boolean exit (){
-        Log.printLine1("Main", "exit", "Check for terminating the experiment");
         if (monitor.getCurrentSessionSum() == 0)//????current sessions
             terminationCounter++;
         else
             terminationCounter = 0;
         
-        return terminationCounter >= 30;
+        return terminationCounter >= 15;
     }
 
     static private void terminator(){

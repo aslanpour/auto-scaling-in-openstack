@@ -54,7 +54,7 @@ public class DefaultSettings {
     public static String ANALYSIS_METHOD_CPU = Method.SIMPLE.name();
     public static String ANALYSIS_METhOD_RT = Method.SIMPLE.name();
     public static double ANALYSIS_SES_ALPHA = 0.2;
-    public static int ANALYSIS_TIME_WINDOW = SCALING_INTERVAL;
+    public static int ANALYSIS_TIME_WINDOW = SCALING_INTERVAL / MONITORING_INTERVAL;
     public enum Method {
         SIMPLE, //returns just the current observed paramteres
         COMPLEX_MA, //is Moving Average 

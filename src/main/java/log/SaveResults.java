@@ -89,7 +89,7 @@ public class SaveResults {
         Log.printLine3("Sum Cost: " + sumCost + " $");
     }
     
-    public static void saveMonitorHistory(ArrayList<MonitorHistory> historyList){
+    public static void saveMonitorHistory(ArrayList<MonitorHistory> historyList, String filePath){
         Log.printLine1("SaveResults", "saveMonitorHistory", "Save monitoring history to CSV file");
         ArrayList dataList = new ArrayList();
         for (MonitorHistory history : historyList){
@@ -119,14 +119,14 @@ public class SaveResults {
         }
         
         try {
-            ReadWriteCSV.writeCSV(dataList, "/src/log/", "monitor_log.csv");
+            ReadWriteCSV.writeCSV(dataList, filePath, "monitor_log.csv");
         } catch (IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     
-    public static void saveAnalyzerHistory(ArrayList<AnalyzerHistory> historyList){
+    public static void saveAnalyzerHistory(ArrayList<AnalyzerHistory> historyList, String filePath){
         Log.printLine1("SaveResults", "saveAnalyzerHistory", "Save analyzing history to CSV file");
         ArrayList dataList = new ArrayList();
         for (AnalyzerHistory history : historyList){
@@ -145,14 +145,14 @@ public class SaveResults {
         }
         
         try {
-            ReadWriteCSV.writeCSV(dataList, "/src/log/", "analyzer_log.csv");
+            ReadWriteCSV.writeCSV(dataList, filePath, "analyzer_log.csv");
         } catch (IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     
-    public static void savePlannerHistory(ArrayList<PlannerHistory> historyList){
+    public static void savePlannerHistory(ArrayList<PlannerHistory> historyList, String filePath){
         Log.printLine1("SaveResults", "savePlannerHistory", "Save planning history to CSV file");
         ArrayList dataList = new ArrayList();
         for (PlannerHistory history : historyList){
@@ -171,14 +171,14 @@ public class SaveResults {
         }
         
         try {
-            ReadWriteCSV.writeCSV(dataList, "/src/log/", "analyzer_log.csv");
+            ReadWriteCSV.writeCSV(dataList, filePath, "planner_log.csv");
         } catch (IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     
-    public static void saveExecutorHistory(ArrayList<ExecutorHistory> historyList){
+    public static void saveExecutorHistory(ArrayList<ExecutorHistory> historyList, String filePath){
         Log.printLine1("SaveResults", "saveExecutorHistory", "Save executing history to CSV file");
         ArrayList dataList = new ArrayList();
         for (ExecutorHistory history : historyList){
@@ -202,7 +202,7 @@ public class SaveResults {
         }
         
         try {
-            ReadWriteCSV.writeCSV(dataList, "/src/log/", "analyzer_log.csv");
+            ReadWriteCSV.writeCSV(dataList, filePath, "executor_log.csv");
         } catch (IOException ex) {
             Logger.getLogger(SaveResults.class.getName()).log(Level.SEVERE, null, ex);
         }

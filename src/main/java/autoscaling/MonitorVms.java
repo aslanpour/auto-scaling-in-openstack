@@ -23,7 +23,7 @@ import log.Log;
  */
 public class MonitorVms implements Runnable{
     // Vm ID and cpu Utilization
-    private double [][] cpuUtilizationPerVm;
+    private double [][] cpuUtilizationPerVm = new double[Main.vmsProvisioned.size()][];
     
     public void run(){
         // create sub threads
@@ -68,6 +68,7 @@ public class MonitorVms implements Runnable{
             this.privateIP = privateIP;
         }
         
+        @Override
         public void run(){
             cpuUtilizationPerVm [arrayIndex][0] = vmIndex; // vm Index
             cpuUtilizationPerVm [arrayIndex] [1] = getCpuUtilization(privateIP); // cpu utilization
@@ -105,7 +106,7 @@ public class MonitorVms implements Runnable{
                     output += line + "\n";
                 }
                 if (counter> 1) System.out.println("ERROR - getCpuUtilization returned more than one output");
-                System.out.println(output);
+//                System.out.println(output);
                 p = null;
 
             } catch (InterruptedException ex) {
@@ -120,7 +121,7 @@ public class MonitorVms implements Runnable{
             cpuUtilization = Double.valueOf(new DecimalFormat("#.##").format(cpuUtilization));
             
             Log.printLine4("CpuUtilizationCalculator", "getCpuUtilization", 
-                    "cpu util for " + vmName + " is" + cpuUtilization + " %");
+                    "cpu util:  " + vmName + " is " + cpuUtilization + " %");
             return cpuUtilization;
 
         }

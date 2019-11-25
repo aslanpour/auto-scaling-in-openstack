@@ -69,8 +69,8 @@ public class PlannerRuleBased extends Planner{
         PlannerHistory plannerHistory = new PlannerHistory(getDecision(),getStepSize());
         getHistoryList().add(plannerHistory);
         
-        Log.printLine2("Save planning results in history:");
-        Log.printLine3("decision= " + getDecision().name().toString() +
+//        Log.printLine2("Save planning results in history:");
+        Log.printLine2("decision= " + getDecision().name().toString() +
                         "\nstep-size= " + getStepSize());
     }
 

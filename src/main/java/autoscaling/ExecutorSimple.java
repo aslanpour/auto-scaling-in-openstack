@@ -176,8 +176,8 @@ public class ExecutorSimple extends Executor{
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 if (httpResponse.getStatusLine().getStatusCode() != 202)
                     System.out.println("Error - Server was not created.");
-                else
-                    Log.printLine1("HTTPPost was successful");
+//                else
+//                    Log.printLine1("HTTPPost was successful");
                 
                 Header[] responseHeader = httpResponse.getAllHeaders(); 
                 String headerValue = responseHeader[1].getValue();
@@ -187,8 +187,7 @@ public class ExecutorSimple extends Executor{
                 httpPost.releaseConnection();
                 httpPost.reset();
 
-                Log.printLine3("ExecutorSimple", "performScaleUp", "New Vm created:");
-                Log.printLine4(vmName + " " + ip);
+                Log.printLine3("ExecutorSimple", "performScaleUp", "New Vm created: " + vmName + " " + ip);
                 
                 //reconfigure haproxy
                 haproxyReconfigurationLocally("ADD", vmName, ip);
@@ -320,7 +319,7 @@ public class ExecutorSimple extends Executor{
                 Logger.getLogger(ExecutorSimple.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (httpResponse.getStatusLine().getStatusCode() != 201)
-                System.out.println("Token was not created properly.");
+                System.out.println("Error - Token was not created properly.");
             
             Header[] responseHeader = httpResponse.getAllHeaders();
             String tokenValue = responseHeader[2].getValue();

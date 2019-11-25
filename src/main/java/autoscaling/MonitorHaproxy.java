@@ -32,9 +32,9 @@ public class MonitorHaproxy implements Runnable{
     private double respnseTimeAvg;
     
     public void run (){
-        Log.printLine3("MonitorHaproxy", "run", "Monitor Haproxy is active");
+        Log.printLine3("MonitorHaproxy", "run", "Monitor Haproxy is active...");
         try {
-            currentSessionsPerVm = new String[Main.vmsProvisioned.size()][];
+            currentSessionsPerVm = new String[Main.vmsProvisioned.size()][2];
             currentSessionsSum = 0;
             respnseTimeAvg = 0;
             
@@ -126,7 +126,7 @@ public class MonitorHaproxy implements Runnable{
             String sessions = backend[backendRowsIndex][indexCurrentSession];// cuurent sessions
 
             currentSessionsPerVm[backendRowsIndex] = new String[]{name, sessions};
-            Log.printLine4("MonitorHaproxy", "parse", "Session No. name= " + name + " session= " + sessions);
+//            Log.printLine4("MonitorHaproxy", "parse", "Session No. name= " + name + " session= " + sessions);
         }
         
         //set total response time
@@ -134,8 +134,8 @@ public class MonitorHaproxy implements Runnable{
         // set sum current sessions
         currentSessionsSum = Integer.valueOf(backendTotal[indexCurrentSession]);
         
-        Log.printLine4("monitorHaproxy", "parse", "Average RT=" + respnseTimeAvg);
-        Log.printLine4("monitorHaproxy", "parse", "Sum Current Sessions =" + currentSessionsSum);
+//        Log.printLine4("monitorHaproxy", "parse", "Average RT=" + respnseTimeAvg);
+//        Log.printLine4("monitorHaproxy", "parse", "Sum Current Sessions =" + currentSessionsSum);
     }
 
     public String[][] getCurrentSessionsPerVm() {

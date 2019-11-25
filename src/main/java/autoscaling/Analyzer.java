@@ -54,9 +54,9 @@ public class Analyzer {
         /* SAVE analysis results to history */
         AnalyzerHistory analyzerHistory = new AnalyzerHistory(analyzedCpuUtilization, analyzedResponseTime);
         getHistoryList().add(analyzerHistory);
-        Log.printLine2("Save Analyed results in the history");
+//        Log.printLine2("Save Analyed results in the history");
         Log.printLine2("Analyzed CPU util.=" + analyzedCpuUtilization
-                        + "\nAnalyzed response time=" + analyzedResponseTime);
+                        + "\n       Analyzed response time=" + analyzedResponseTime);
     }
     
     /**
