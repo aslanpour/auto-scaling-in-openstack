@@ -215,7 +215,7 @@ public class ExecutorSimple extends Executor{
      * @param stepSize 
      */
     @Override
-    public void performScaleDown(int stepSize){
+    public void performScaleDown(int stepSize){///vmsdeprovisioned????
         try {
             Log.printLine3("ExecutorSimple", "perfromScaleDown", "is running to remove " + stepSize + " Vm(s)");
             //OpenStack Authentication
