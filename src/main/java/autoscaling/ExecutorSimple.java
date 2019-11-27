@@ -268,8 +268,8 @@ public class ExecutorSimple extends Executor{
                 tmpVm.billCalculator();
                 Main.vmsDeprovisioned.add(tmpVm);
                 
-                // update SSH known Hosts
-                updateSshKnownHosts(vm.getPrivateIP());
+                // update SSH known Hosts (this is done by haproxyReconfiguration file)
+//                updateSshKnownHosts(vm.getPrivateIP());
             }
             
             

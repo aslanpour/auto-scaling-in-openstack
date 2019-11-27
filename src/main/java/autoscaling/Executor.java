@@ -115,41 +115,41 @@ public abstract class Executor {
      * @param ip 
      */
     public void updateSshKnownHosts (final String ip){ 
-        Log.printLine1("Executor", "updateSshKnonwnHosts", "update known hosts for " + ip);
-        Thread updateSshKnownHosts = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                
-                try {
-                    Process p = null;
-
-                    String command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R " + ip;
-                   // Reset KnonwHosts
-                    p = Runtime.getRuntime().exec(command);
-
-                    p.waitFor();
-                    BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    String line = "";
-                    String output = "";
-                    int counter = 0;
-                    while ((line = buf.readLine()) != null) {
-                        // return the bash output
-                        System.out.println(Double.valueOf(line));
-                    }
-                    System.out.println(output);
-                    p = null;
-                    
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        // start the thread
-        updateSshKnownHosts.start();
-        
+//        Log.printLine1("Executor", "updateSshKnonwnHosts", "update known hosts for " + ip);
+//        Thread updateSshKnownHosts = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                
+//                try {
+//                    Process p = null;
+//
+//                    String command = "ssh-keygen -f \"/home/ubuntu/.ssh/known_hosts\" -R " + ip;
+//                   // Reset KnonwHosts
+//                    p = Runtime.getRuntime().exec(command);
+//
+//                    p.waitFor();
+//                    BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//                    String line = "";
+//                    String output = "";
+//                    int counter = 0;
+//                    while ((line = buf.readLine()) != null) {
+//                        // return the bash output
+//                        System.out.println(Double.valueOf(line));
+//                    }
+//                    System.out.println(output);
+//                    p = null;
+//                    
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+////                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
+//        // start the thread
+//        updateSshKnownHosts.start();
+//        
 
     }
     public DefaultSettings.Action getAction() {
