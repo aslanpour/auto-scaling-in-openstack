@@ -82,7 +82,8 @@ public class MonitorVms implements Runnable{
          * @return 
          */
         private double getCpuUtilization(String serverIP){
-            double cpuIdle = 0;
+            double cpuIdleAvg = 0;
+            double[] cpuIdleList = new double[Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)];
             double cpuUtilization = 0;
 
             try {
@@ -92,8 +93,9 @@ public class MonitorVms implements Runnable{
                 " ssh -o " + "StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
                 + DefaultSettings.WEB_SERVER_USERNAME + "@" + serverIP + 
                 " -i " + DefaultSettings.FILE_LOCATION_HAPROXY_PRIVATE_KEY 
-                + " sudo bash " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
-//ssh 10.10.0.39 -i mykeypair.pem sudo tail -n 3 cpulog.txt
+                + " sudo " + "tail -n " + DefaultSettings.CPU_LOG_ITEMS + " " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
+//                + " sudo bash " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
+
                 p.waitFor();
                 BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 String line = "";
@@ -101,11 +103,12 @@ public class MonitorVms implements Runnable{
                 int counter = 0;
                 while ((line = buf.readLine()) != null) {
                     // return the bash output
-                    cpuIdle = Double.valueOf(line);
+                    cpuIdleList[counter] = Double.valueOf(line);
+                    System.out.println("cpu " + counter + "= " + cpuIdleList[counter]);
                     counter++;
                     output += line + "\n";
                 }
-                if (counter> 1) System.out.println("ERROR - getCpuUtilization returned more than one output");
+                if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) System.out.println("ERROR - getCpuUtilization returned more than one output");
 //                System.out.println(output);
                 p = null;
 
@@ -115,8 +118,11 @@ public class MonitorVms implements Runnable{
                 Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            //calculate average cpu idle
+            cpuIdleAvg = Main.getAnalyzer().calculateWeightedMovingAverage(cpuIdleList);
+            
             // change idle percentage to utilization
-            cpuUtilization = 100 - cpuIdle;
+            cpuUtilization = 100 - cpuIdleAvg;
             // get only two decimal places
             cpuUtilization = Double.valueOf(new DecimalFormat("#.##").format(cpuUtilization));
             

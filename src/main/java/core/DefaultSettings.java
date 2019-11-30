@@ -11,11 +11,14 @@ package core;
  */
 public class DefaultSettings {
     //File to collect CPU utiliation, located on web servers. 
-    //(1, 2,3, 10, 30, 60)
-    private static String CPU_MONITOR_DURATION = "3"; // second
-    public static final String FILE_LOCATION_CPU_UTILIZATION = "/home/ubuntu/get_cpu_idle"
-            + CPU_MONITOR_DURATION + ".sh";
-    
+//    //(1, 2,3, 10, 30, 60)
+//    private static String CPU_MONITOR_DURATION = "3"; // second
+//    public static final String FILE_LOCATION_CPU_UTILIZATION = "/home/ubuntu/get_cpu_idle"
+//            + CPU_MONITOR_DURATION + ".sh";
+
+    //should be <= monitoring interval
+    public static final String CPU_LOG_ITEMS = "30";
+    public static final String FILE_LOCATION_CPU_UTILIZATION = "/home/ubuntu/cpu_log.txt";
     // file to update haproxy
     public static final String FILE_LOCATION_HAPROXY_RECONFIGURATION = "/home/ubuntu/haproxy_reconfiguration.sh";
     
@@ -34,10 +37,18 @@ public class DefaultSettings {
     public static final String WEB_SERVER_PASSWORD = "ubuntu";
     //Default ubuntu user
     public static final String WEB_SERVER_USERNAME = "ubuntu";
+    
+    // Table of flavors
+    public static final String[][] FLAVOR_TABLE = new String[][]{
+        //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
+        {"2", "m1.small", "1", "2", "20", "0.02", "a5262b74-9f39-4c3c-8eb7-6cf4abba913c"},
+        {"3", "m1.medium", "2", "4", "40", "0.04", "ae5f8e0c-41b4-4a79-a840-803d4ad99ee"}
+    };
+    
     // the ID of web server snapshot
-    // small snapshot:    a5262b74-9f39-4c3c-8eb7-6cf4abba913c
-    // medium snapshot:   ae5f8e0c-41b4-4a79-a840-803d4ad99ee6
-    public static final String OS_COMPUTE_IMAGE_ID = "a5262b74-9f39-4c3c-8eb7-6cf4abba913c";
+    // small snapshot:    [0][6]
+    // medium snapshot:   [1][6]
+    public static final String OS_COMPUTE_IMAGE_ID = FLAVOR_TABLE[0][6];
     public static final String OS_NEUTRON_NETWORK_UUID_PRIVATE = "e291c471-deca-4dc6-a593-f2e089bb6d86";
     public static final String OS_NEUTRON_SECURITYGROUP_NAME = "AutoscalingSecurityGroup";
     public static final String OS_COMPUTE_KEYPAIRS_NAME = "mykeypair"; 
@@ -106,12 +117,7 @@ public class DefaultSettings {
     public static int COOLDOWN = 0;
     public static int MAX_ALLOWED_WEB_SERVER = 15;
     public static int MIN_ALLOWED_WEB_SERVER = 1;
-    // Table of flavors
-    public static final String[][] FLAVOR_TABLE = new String[][]{
-        //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
-        {"2", "m1.small", "1", "2", "20", "0.02"},
-        {"3", "m1.medium", "2", "4", "40", "0.04"}
-    };
+    
     
     //ip net: 10.10.0.0/24 
     public static final String netIP = "10.10.0.";

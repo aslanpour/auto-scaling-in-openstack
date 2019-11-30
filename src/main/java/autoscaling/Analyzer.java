@@ -186,7 +186,7 @@ public class Analyzer {
      * @param parameterList
      * @return 
      */
-    private double calculateWeightedMovingAverage(double[] parameterList){
+    public double calculateWeightedMovingAverage(double[] parameterList){
         double sumWeightedItem = 0;
         double sumWeight = 0;
         int weight = 1;
