@@ -93,7 +93,7 @@ public class MonitorVms implements Runnable{
                 + DefaultSettings.WEB_SERVER_USERNAME + "@" + serverIP + 
                 " -i " + DefaultSettings.FILE_LOCATION_HAPROXY_PRIVATE_KEY 
                 + " sudo bash " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
-
+//ssh 10.10.0.39 -i mykeypair.pem sudo tail -n 3 cpulog.txt
                 p.waitFor();
                 BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 String line = "";
