@@ -132,6 +132,7 @@ public class SaveResults {
         for (AnalyzerHistory history : historyList){
             double cpuUtilizationAvg = history.getCpuUtilization();
             double responseTimeAvg = history.getResponseTime();
+            double requests = history.getRequests();
             
             ArrayList<Double> row = new ArrayList<>();
             row.add((double)history.getYear());
@@ -140,7 +141,8 @@ public class SaveResults {
             row.add((double)history.getMinute());
             row.add(cpuUtilizationAvg);
             row.add(responseTimeAvg);
-                        
+            row.add(requests);
+            
             dataList.add(row);
         }
         

@@ -23,12 +23,16 @@ public class PlannerRuleBased extends Planner{
     private final double cpuScaleDownThreshold;
     private final double delayTimeMax;
     private final double delayTimeMin;
+    private final double requestsUpThreshold;
+    private final double requestsDownThreshold;
 
     public PlannerRuleBased(DefaultSettings.ScalingRule rule, 
                             double cpuScaleUpThreshold, 
                             double cpuScaleDownThreshold, 
                             double delayTimeMax, 
-                            double delayTimeMin, 
+                            double delayTimeMin,
+                            double requestsUpThreshold,
+                            double requestsDownThreshold,
                             int stepSize) {
         super(stepSize); // history is created by Planner class
         this.rule = rule;
@@ -36,6 +40,8 @@ public class PlannerRuleBased extends Planner{
         this.cpuScaleDownThreshold = cpuScaleDownThreshold;
         this.delayTimeMax = delayTimeMax;
         this.delayTimeMin = delayTimeMin;
+        this.requestsUpThreshold = requestsUpThreshold;
+        this.requestsDownThreshold = requestsDownThreshold;
     }
     
     @Override
@@ -51,12 +57,15 @@ public class PlannerRuleBased extends Planner{
 
         double analyzedCpuUtilization = analyzerHistory.getCpuUtilization();
         double analyzedResponseTime = analyzerHistory.getResponseTime();
-
+        double analyzedRequests = analyzerHistory.getRequests();
+        int vms = Main.getMonitor().getVms();
+        
         /* Select the rule */
         switch(rule){
             case RESOURCE_AWARE  : rule_ResourceAware(analyzedCpuUtilization); break;
             case SLA_AWARE  : rule_SLAAware(analyzedResponseTime); break;
             case HYBRID : rule_HYBRID(analyzedCpuUtilization, analyzedResponseTime); break;
+            case LOAD_AWARE : rule_LoadAware(analyzedRequests, vms); break;
             case UT_1Al : rule_UT_1Al(analyzedCpuUtilization); break;
             case UT_2Al : rule_UT_2Al(analyzedCpuUtilization); break;
             case LAT_1Al : rule_LAT_1Al(analyzedCpuUtilization, analyzedResponseTime); break;
@@ -105,6 +114,14 @@ public class PlannerRuleBased extends Planner{
         if(cpuUtil > cpuScaleUpThreshold && delayTime > delayTimeMax)
             setDecision( DefaultSettings.PlannerDecision.SCALE_UP);
         else if (cpuUtil < cpuScaleDownThreshold && delayTime < delayTimeMin)
+            setDecision(DefaultSettings.PlannerDecision.SCALE_DOWN);
+    }
+    
+    private void rule_LoadAware(double requests, int vms){
+        double currentLoadPerVm = Math.ceil(requests / vms);
+        if (currentLoadPerVm > requestsUpThreshold)
+            setDecision(DefaultSettings.PlannerDecision.SCALE_UP);
+        else if (currentLoadPerVm < requestsDownThreshold)
             setDecision(DefaultSettings.PlannerDecision.SCALE_DOWN);
     }
     

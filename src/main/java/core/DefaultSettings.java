@@ -64,6 +64,8 @@ public class DefaultSettings {
     //Analyzing
     public static String ANALYSIS_METHOD_CPU = Method.SIMPLE.name();
     public static String ANALYSIS_METhOD_RT = Method.SIMPLE.name();
+    public static String ANALYSIS_METHOD_REQ = Method.SIMPLE.name();
+    
     public static double ANALYSIS_SES_ALPHA = 0.2;
     public static int ANALYSIS_TIME_WINDOW = SCALING_INTERVAL / MONITORING_INTERVAL;
     public enum Method {
@@ -75,13 +77,14 @@ public class DefaultSettings {
         
     }
     //planner
-    public static ScalingRule rule = ScalingRule.RESOURCE_AWARE;
+    public static ScalingRule rule = ScalingRule.LOAD_AWARE;
     public enum ScalingRule {
         /* please cite: https://ieeexplore.ieee.org/abstract/document/7498443/ */
         RESOURCE_AWARE, // Resource aware, - Decision-making by Resource utilization rule (Amazon default policy)
         SLA_AWARE, //      SLA aware - Decision making by delay time rule
         HYBRID, //        Resource-and-SLA aware - Decision making by both resource utilization and delay time rules
-
+        LOAD_AWARE,
+        
         /* please cite: https://www.sciencedirect.com/science/article/pii/S1389128612003763 */
         UT_1Al, //    'Util.-based One Alaram'- Decision-making by resources utilization
         UT_2Al, //    'Util.-based Two alarms' - Decision-making by resources utilization
@@ -90,8 +93,13 @@ public class DefaultSettings {
     }  
     public static double PLANNER_CPU_UP = 70;
     public static double PLANNER_CPU_DOWN = 30;
+    
     public static double PLANNER_RT_UP = 1;
     public static double PLANNER_RT_DOWN = 0.2;
+    
+    public static double PLANNER_REQ_UP = 7;
+    public static double PLANNER_REQ_DOWN = 4;
+    
     public static int PLANNER_StEP_SIZE = 1;
     
     public enum PlannerDecision {
@@ -115,7 +123,7 @@ public class DefaultSettings {
     }
     public static boolean COOLDOWN_ENABLED = false;
     public static int COOLDOWN = 0;
-    public static int MAX_ALLOWED_WEB_SERVER = 15;
+    public static int MAX_ALLOWED_WEB_SERVER = 10;
     public static int MIN_ALLOWED_WEB_SERVER = 1;
     
     
@@ -137,4 +145,6 @@ public class DefaultSettings {
         SCALE_DOWN_REDUCED_BY_MAX_ALLOWED,
         SCALE_DOWN_BANNED_BY_MIN_ALLOWED_VM
     }
+    
+    public static final int TEST_TERMINATION_COUNTER = 5;
 }

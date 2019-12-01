@@ -28,7 +28,8 @@ public class Main {
     
     public static Monitor monitor = new Monitor();
     public static Analyzer analyzer = new Analyzer(DefaultSettings.ANALYSIS_METHOD_CPU, 
-                                                    DefaultSettings.ANALYSIS_METhOD_RT, 
+                                                    DefaultSettings.ANALYSIS_METhOD_RT,
+                                                    DefaultSettings.ANALYSIS_METHOD_REQ,
                                                     DefaultSettings.ANALYSIS_SES_ALPHA, 
                                                     DefaultSettings.ANALYSIS_TIME_WINDOW);
     
@@ -36,7 +37,9 @@ public class Main {
                                                         DefaultSettings.PLANNER_CPU_UP, 
                                                         DefaultSettings.PLANNER_CPU_DOWN, 
                                                         DefaultSettings.PLANNER_RT_UP, 
-                                                        DefaultSettings.PLANNER_RT_DOWN, 
+                                                        DefaultSettings.PLANNER_RT_DOWN,
+                                                        DefaultSettings.PLANNER_REQ_UP,
+                                                        DefaultSettings.PLANNER_REQ_DOWN,
                                                         DefaultSettings.PLANNER_StEP_SIZE);
     
     public static Executor executor = new ExecutorSimple(DefaultSettings.surplusVMSelectionPolicy, 
@@ -133,7 +136,7 @@ public class Main {
         else
             terminationCounter = 0;
         
-        return terminationCounter >= 5;
+        return terminationCounter >= DefaultSettings.TEST_TERMINATION_COUNTER;
     }
 
     static private void terminator(){

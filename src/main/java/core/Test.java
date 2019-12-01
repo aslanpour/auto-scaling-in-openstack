@@ -19,6 +19,7 @@ public class Test {
         c =c;
         System.out.println("tt\n\nt");
         String testStartTime = Log.getTimeStr().substring(0, 5);
+        double currentLoad = Math.ceil(0 / 8);
         c=c;
     }
    

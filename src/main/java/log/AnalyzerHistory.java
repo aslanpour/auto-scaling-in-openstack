@@ -12,12 +12,14 @@ package log;
 public class AnalyzerHistory extends History {
     private double cpuUtilization;
     private double responseTime;
+    private double requests;
 
-    public AnalyzerHistory(double cpuUtilization, double responseTime) {
+    public AnalyzerHistory(double cpuUtilization, double responseTime, double requests) {
         super();
         
         this.cpuUtilization = cpuUtilization;
         this.responseTime = responseTime;
+        this.requests = requests;
     }
 
     public double getCpuUtilization() {
@@ -34,6 +36,14 @@ public class AnalyzerHistory extends History {
 
     public void setResponseTime(double responseTime) {
         this.responseTime = responseTime;
+    }
+
+    public double getRequests() {
+        return requests;
+    }
+
+    public void setRequests(double requests) {
+        this.requests = requests;
     }
     
     

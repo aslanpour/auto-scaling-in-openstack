@@ -19,6 +19,7 @@ import log.MonitorHistory;
 public class Analyzer {
     private String analysisMethodCpu;
     private String analysisMethodRT;
+    private String analysisMethodReq;
     private double sesAlpha;
     private int timeWindow; 
     private ArrayList<AnalyzerHistory> historyList;
@@ -26,10 +27,13 @@ public class Analyzer {
     
     private double analyzedCpuUtilization;
     private double analyzedResponseTime;
-
-    public Analyzer(String analysisMethodCpu, String analysisMethodRT, double sesAlpha, int timeWindow) {
+    private double analyzedRequests;
+    
+    public Analyzer(String analysisMethodCpu, String analysisMethodRT, String analysisMethodReq, double sesAlpha, int timeWindow) {
         this.analysisMethodCpu = analysisMethodCpu;
         this.analysisMethodRT = analysisMethodRT;
+        this.analysisMethodReq = analysisMethodReq;
+        
         this.sesAlpha = sesAlpha;
         this.timeWindow = timeWindow;
         
@@ -51,12 +55,16 @@ public class Analyzer {
         // SLA-AWARE analysis
         analyzedResponseTime = ANALAYZE_ResponseTime(analysisMethodRT);
         
+        //LOAD-AWARE analysis
+        analyzedRequests = ANALAYZE_Requests(analysisMethodReq);
+        
         /* SAVE analysis results to history */
-        AnalyzerHistory analyzerHistory = new AnalyzerHistory(analyzedCpuUtilization, analyzedResponseTime);
+        AnalyzerHistory analyzerHistory = new AnalyzerHistory(analyzedCpuUtilization, analyzedResponseTime, analyzedRequests);
         getHistoryList().add(analyzerHistory);
 //        Log.printLine2("Save Analyed results in the history");
         Log.printLine2("Analyzed CPU util.=" + analyzedCpuUtilization
-                        + "\n       Analyzed response time=" + analyzedResponseTime);
+                        + "\n       Analyzed response time= " + analyzedResponseTime
+                        + "\n       Analyzed requests= " + analyzedRequests);
     }
     
     /**
@@ -168,6 +176,58 @@ public class Analyzer {
         return analyzedResponseTime;
     }
     
+    
+    private double ANALAYZE_Requests(String analysisMethod){
+        Log.printLine3("Analyzing requests . . .");
+        double analyzedRequests = -1;
+        
+        // Get monitor history
+        ArrayList<MonitorHistory> tmpHistoryList = getMonitor().getMonitorHistory();
+        int sizeHistory = tmpHistoryList.size();
+        // Set the latest monitored Requests item
+        double requests = tmpHistoryList.get(sizeHistory - 1).getCurrentSessionsSum();
+        // Set a list of monitored Requests
+        double requestsList[] = new double[timeWindow];
+
+        int j = 0;
+        for(int i = (sizeHistory - timeWindow); i< sizeHistory;i++){
+            requestsList[j] = tmpHistoryList.get(i).getCurrentSessionsSum();
+            j++;
+        }
+                     
+        switch(analysisMethod){
+            // Simple
+            case "SIMPLE": 
+                analyzedRequests = requests;
+                break;
+                
+            // Moving Average
+            case "COMPLEX_MA": 
+                    analyzedRequests = calculateMovingAverage(requestsList);
+                break;
+                
+            // Weighted Moving Average
+            case "COMPLEX_WMA": 
+                    analyzedRequests = calculateWeightedMovingAverage(requestsList);
+                break;
+                
+            // Weighted Moving Average (weighting by Fibonacci numbers)
+            case "COMPLEX_WMAfibo": 
+                analyzedRequests = calculateWeightedMovingAverageFibonacci(requestsList);
+                break;
+                
+            // Single exponential smoothing
+            case "COMPLEX_SES":
+                analyzedRequests = calculateSingleExponentialSmoothing(requests, oldSESOutput, sesAlpha);
+                oldSESOutput = analyzedRequests;
+                break;
+            
+            default:
+                Log.printLine1("Error (Analyzer class, ANALYZE_Requests method) - analysis method not found");
+        }
+        return analyzedRequests;
+    }
+    
     /**
      * Analyzes the indicated parameter by Moving Average method
      * @param parameterList
@@ -243,6 +303,14 @@ public class Analyzer {
         return analysisMethodRT;
     }
 
+    public String getAnalysisMethodReq() {
+        return analysisMethodReq;
+    }
+
+    public void setAnalysisMethodReq(String analysisMethodReq) {
+        this.analysisMethodReq = analysisMethodReq;
+    }
+       
     public double getSesAlpha() {
         return sesAlpha;
     }
