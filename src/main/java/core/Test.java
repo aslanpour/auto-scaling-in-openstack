@@ -5,6 +5,8 @@
  */
 package core;
 
+import log.Log;
+
 /**
  *
  * @author aslanpour
@@ -15,6 +17,9 @@ public class Test {
         int b = 60000;
         int c = a/b;
         c =c;
+        System.out.println("tt\n\nt");
+        String testStartTime = Log.getTimeStr().substring(0, 5);
+        c=c;
     }
    
 }

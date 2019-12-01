@@ -23,7 +23,7 @@ import log.Log;
  */
 public class MonitorVms implements Runnable{
     // Vm ID and cpu Utilization
-    private double [][] cpuUtilizationPerVm = new double[Main.vmsProvisioned.size()][];
+    private double [][] cpuUtilizationPerVm = new double[Main.vmsProvisioned.size()][2];
     
     public void run(){
         // create sub threads
@@ -35,7 +35,7 @@ public class MonitorVms implements Runnable{
             i++;    
         }
         //run threads
-        Log.printLine3("MonitorVms", "run", "Starting " + Main.vmsProvisioned.size() + " threads");
+        Log.printLine3("MonitorVms", "run", "Monitor Vms is active    (starting " + Main.vmsProvisioned.size() + " threads)");
         for (i = 0; i <thread.length; i++){
            thread[i].start();
         }
@@ -104,12 +104,12 @@ public class MonitorVms implements Runnable{
                 while ((line = buf.readLine()) != null) {
                     // return the bash output
                     cpuIdleList[counter] = Double.valueOf(line);
-                    System.out.println("cpu " + counter + "= " + cpuIdleList[counter]);
+//                    System.out.println("cpu " + counter + "= " + cpuIdleList[counter]);
                     counter++;
                     output += line + "\n";
                 }
                 if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) System.out.println("ERROR - getCpuUtilization returned more than one output");
-//                System.out.println(output);
+                else if (counter < Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) System.out.println("Error - getCpuUtilization monitored cpu idles less than requested");
                 p = null;
 
             } catch (InterruptedException ex) {
@@ -126,8 +126,8 @@ public class MonitorVms implements Runnable{
             // get only two decimal places
             cpuUtilization = Double.valueOf(new DecimalFormat("#.##").format(cpuUtilization));
             
-            Log.printLine4("CpuUtilizationCalculator", "getCpuUtilization", 
-                    "cpu util:  " + vmName + " is " + cpuUtilization + " %");
+//            Log.printLine4("CpuUtilizationCalculator", "getCpuUtilization", 
+//                    "cpu util:  " + vmName + " is " + cpuUtilization + " %");
             return cpuUtilization;
 
         }

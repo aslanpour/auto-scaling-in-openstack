@@ -119,6 +119,7 @@ public class Monitor {
             Log.printLine2("Monitored data:"
                     + "\nCPU util. avg= " + cpuUtilizationAvg 
                     + "\nResponseTime avg= " + responseTimeAvg
+                    + "\nCurrentSessions sum= " + currentSessionSum
                     + "\nVms No.= " + vms 
                     + "\nquarantineed Vms No.= " + quarantined);
         } catch (InterruptedException ex) {

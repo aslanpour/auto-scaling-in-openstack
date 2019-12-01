@@ -62,15 +62,18 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        Log.printLine1("Auto-scaling started working");
+        Log.printLine1("Auto-scaling started working at " + Log.getTimestampStr());
+        String testStartTime = Log.getTimeStr().substring(0, 5);
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
-                Log.printLine1("Main", "main", "Sleeping monitoring ("
+                Log.printLine1("\nMain", "main", "Sleeping monitoring ("
                                 + DefaultSettings.MONITORING_INTERVAL /1000 + " sec)"
-                                + " Scaling (" + DefaultSettings.SCALING_INTERVAL/1000 + " sec)");
-                Thread.sleep(DefaultSettings.MONITORING_INTERVAL);
-                
+                                + " Scaling (" + timeToRunScaler /1000 + " sec)"
+                                + " Run from (" + testStartTime + ")");
+                Thread.sleep(DefaultSettings.MONITORING_INTERVAL - 5000);
+                Log.printLine2("Calling the monitor . . .");
+                Thread.sleep(5000);
                 // call monitor
                 monitor.doMonitoring();
                
@@ -81,10 +84,10 @@ public class Main {
                 
                 timeToRunScaler -= DefaultSettings.MONITORING_INTERVAL;
                
-                if (timeToRunScaler > 0)
-                    Log.printLine1("Main", "main", " Remained time to scaling: " + (timeToRunScaler / 1000) + " sec");
-                else if (timeToRunScaler <= 0){
-                    Log.printLine2("Main", "main", "Full autoscaling started...");
+//                if (timeToRunScaler > 0)
+//                    Log.printLine1("Main", "main", " Remained time to scaling: " + (timeToRunScaler / 1000) + " sec");
+                if (timeToRunScaler <= 0){
+                    Log.printLine2("\n\nMain", "main", "*******  Full autoscaling started...  *******");
                     // call analyzer
                     analyzer.doAnalysis();
                     // call planner
@@ -130,7 +133,7 @@ public class Main {
         else
             terminationCounter = 0;
         
-        return terminationCounter >= 15;
+        return terminationCounter >= 5;
     }
 
     static private void terminator(){

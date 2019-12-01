@@ -52,7 +52,7 @@ public class ExecutorSimple extends Executor{
     
     @Override
     public void doExecution(){
-        Log.printLine2("ExecutorSimple", "doExecution", "Executor started . . .");
+        Log.printLine2("\nExecutorSimple", "doExecution", "Executor started . . .");
         // executor needs to obtain these parameters
         setAction(DefaultSettings.Action.DO_NOTHING);
         setProvisioned(0);

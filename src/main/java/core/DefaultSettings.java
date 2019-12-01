@@ -41,8 +41,8 @@ public class DefaultSettings {
     // Table of flavors
     public static final String[][] FLAVOR_TABLE = new String[][]{
         //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
-        {"2", "m1.small", "1", "2", "20", "0.02", "a5262b74-9f39-4c3c-8eb7-6cf4abba913c"},
-        {"3", "m1.medium", "2", "4", "40", "0.04", "ae5f8e0c-41b4-4a79-a840-803d4ad99ee"}
+        {"2", "m1.small", "1", "2", "20", "0.02", "81edade3-9325-4ca1-9d2d-03cb077858b8"},
+        {"3", "m1.medium", "2", "4", "40", "0.04", "739ab0a2-ad02-4d54-8cd9-d5ecedce513f"}
     };
     
     // the ID of web server snapshot
