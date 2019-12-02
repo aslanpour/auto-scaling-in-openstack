@@ -13,6 +13,16 @@ import log.Log;
  */
 public class Test {
     public static void main(String[] args) {
+        double[] aaa = new double[4];
+        aaa[0] = 0;
+        aaa[1] =1;
+        aaa[2] = 2;
+        aaa[3] = 3;
+        
+        double[] bbb = new double[1];
+        bbb[0] = 5;
+        aaa = bbb.clone();
+        
         int a =300000;
         int b = 60000;
         int c = a/b;

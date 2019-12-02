@@ -108,8 +108,15 @@ public class MonitorVms implements Runnable{
                     counter++;
                     output += line + "\n";
                 }
-                if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) System.out.println("ERROR - getCpuUtilization returned more than one output");
-                else if (counter < Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) System.out.println("Error - getCpuUtilization monitored cpu idles less than requested");
+                if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) 
+                    System.out.println("ERROR - getCpuUtilization returned more than one output");
+                else if (counter < Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)){
+                    double[] cpuIdleListTmp = new double[counter];
+                    for(int i=0; i <counter; i++)
+                        cpuIdleListTmp[i] = cpuIdleList[i];
+                    
+                    cpuIdleList = cpuIdleListTmp.clone();
+                }
                 p = null;
 
             } catch (InterruptedException ex) {
