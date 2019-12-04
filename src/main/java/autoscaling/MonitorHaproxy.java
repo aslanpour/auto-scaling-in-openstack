@@ -94,7 +94,8 @@ public class MonitorHaproxy implements Runnable{
         
         String[] titles = null;
         String[] frontend = null;
-        String [][] backend = new String[Main.vmsProvisioned.size()][]; 
+        //line index 2 is the first backend server
+        String [][] backend = new String[Main.vmsProvisioned.size()][lines[2].split(",").length];// 2 or more untill n-1 (they are web servers) 
         String[] backendTotal = null;
         
         for(int row = 0; row < lines.length; row++){
@@ -123,7 +124,7 @@ public class MonitorHaproxy implements Runnable{
         // set current sessions per vms
         for (int backendRowsIndex = 0; backendRowsIndex < backend.length; backendRowsIndex++){
             String name = backend[backendRowsIndex][1]; // vm name
-            String sessions = backend[backendRowsIndex][indexCurrentSession];// cuurent sessions
+            String sessions = backend[backendRowsIndex][indexCurrentSession];// current sessions
 
             currentSessionsPerVm[backendRowsIndex] = new String[]{name, sessions};
         }

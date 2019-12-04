@@ -19,6 +19,8 @@ import log.Log;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
+        int[] rr = new int[4];
+        Log.printLine1(String.valueOf(rr[1]));
         Log.printLine();
         System.out.println("core.Test.main()");
         Log.printLine();
