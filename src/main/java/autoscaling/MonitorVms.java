@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import log.Log;
@@ -85,7 +86,7 @@ public class MonitorVms implements Runnable{
             double cpuIdleAvg = 0;
             double[] cpuIdleList = new double[Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)];
             double cpuUtilization = 0;
-
+            
             try {
                 Process p = null;
                // Get CPU idle percentage
@@ -95,7 +96,7 @@ public class MonitorVms implements Runnable{
                 " -i " + DefaultSettings.FILE_LOCATION_HAPROXY_PRIVATE_KEY 
                 + " sudo " + "tail -n " + DefaultSettings.CPU_LOG_ITEMS + " " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
 //                + " sudo bash " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
-
+//                p.waitFor(10, TimeUnit.DAYS)
                 p.waitFor();
                 BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 String line = "";
@@ -108,7 +109,7 @@ public class MonitorVms implements Runnable{
                     counter++;
                     output += line + "\n";
                 }
-                if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) 
+                if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) // remove > and check time out for when the vm is not ready yet (see if java waits for the timeout or runs)?????
                     System.out.println("ERROR - getCpuUtilization returned more than one output");
                 else if (counter < Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)){
                     double[] cpuIdleListTmp = new double[counter];

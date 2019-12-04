@@ -15,6 +15,9 @@ import java.util.Date;
  */
 public class Log {
     
+    public static void printLine(){
+        System.out.println("");
+    }
     public static Timestamp getTimestamp(){
 //        Date currentDate = new java.util.Date();
 //        String timestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(currentDate);

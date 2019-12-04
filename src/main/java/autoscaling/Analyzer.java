@@ -45,7 +45,8 @@ public class Analyzer {
     * Analyzing effective parameters
     */
     public void doAnalysis(){
-        Log.printLine2("\nAnalyzer", "doAnalysis", "Analyzing phase started...");
+        Log.printLine();
+        Log.printLine2("Analyzer", "doAnalysis", "Analyzing phase started...");
 /* initialing Analysis Parameters */
         
         /* calculation of analysis parameters */
@@ -72,17 +73,24 @@ public class Analyzer {
      * @return 
      */
     private double ANALAYZE_CPUUtil(String analysisMethod){
-        Log.printLine3("Analyzing CPU util. . .");
+//        Log.printLine3("Analyzing CPU util. . .");
         double analyzedCPUUtilization = -1;
         // Get VM monitor history
         ArrayList<MonitorHistory> tmpHistoryList = Main.getMonitor().getMonitorHistory();
         int sizeHistory = tmpHistoryList.size();
         // Set the latest monitored Cpu utilization item
         double cpuUtil = tmpHistoryList.get(sizeHistory - 1).getCpuUtilizationAvg();
+        
         // Set a list of monitored Cpu utilization
-        double cpuUtilList[] = new double[timeWindow];
+        int window = timeWindow;
+        double cpuUtilList[];
+        if (sizeHistory < timeWindow){ // for the begining of the test
+            window = sizeHistory;
+        }
+        
+        cpuUtilList = new double[window];
         int j = 0;
-        for(int i = (sizeHistory - timeWindow); i< sizeHistory;i++){
+        for(int i = (sizeHistory - window); i< sizeHistory;i++){
             cpuUtilList[j] = tmpHistoryList.get(i).getCpuUtilizationAvg();
             j++;
         }
@@ -126,7 +134,7 @@ public class Analyzer {
      * @return 
      */
     private double ANALAYZE_ResponseTime(String analysisMethod){
-        Log.printLine3("Analyzing response time . . .");
+//        Log.printLine3("Analyzing response time . . .");
         double analyzedResponseTime = -1;
         
         // Get monitor history
@@ -134,11 +142,18 @@ public class Analyzer {
         int sizeHistory = tmpHistoryList.size();
         // Set the latest monitored Response Time item
         double responseTime = tmpHistoryList.get(sizeHistory - 1).getResponseTimeAvg();
+        
         // Set a list of monitored Response Time
-        double responseTimeList[] = new double[timeWindow];
-
+        int window = timeWindow;
+        double responseTimeList[];
+        if (sizeHistory < timeWindow){ // for the begining of the test
+            window = sizeHistory;
+        }
+        
+        responseTimeList = new double[window];
+        
         int j = 0;
-        for(int i = (sizeHistory - timeWindow); i< sizeHistory;i++){
+        for(int i = (sizeHistory - window); i< sizeHistory;i++){
             responseTimeList[j] = tmpHistoryList.get(i).getResponseTimeAvg();
             j++;
         }
@@ -178,7 +193,7 @@ public class Analyzer {
     
     
     private double ANALAYZE_Requests(String analysisMethod){
-        Log.printLine3("Analyzing requests . . .");
+//        Log.printLine3("Analyzing requests . . .");
         double analyzedRequests = -1;
         
         // Get monitor history
@@ -186,11 +201,18 @@ public class Analyzer {
         int sizeHistory = tmpHistoryList.size();
         // Set the latest monitored Requests item
         double requests = tmpHistoryList.get(sizeHistory - 1).getCurrentSessionsSum();
+        
         // Set a list of monitored Requests
-        double requestsList[] = new double[timeWindow];
+        int window = timeWindow;
+        double requestsList[];
+        if (sizeHistory < timeWindow){ // for the begining of the test
+            window = sizeHistory;
+        }
+        
+        requestsList = new double[window];
 
         int j = 0;
-        for(int i = (sizeHistory - timeWindow); i< sizeHistory;i++){
+        for(int i = (sizeHistory - window); i< sizeHistory;i++){
             requestsList[j] = tmpHistoryList.get(i).getCurrentSessionsSum();
             j++;
         }

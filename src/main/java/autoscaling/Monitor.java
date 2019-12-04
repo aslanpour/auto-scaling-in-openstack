@@ -37,6 +37,8 @@ public class Monitor {
     private int vms;
     private int quarantined;
     
+    private int maxProvisionedVM = 0;
+    
     public Monitor(){
         this.cpuUtilizationAvg = 0;
         this.responseTimeAvg = 0;
@@ -46,6 +48,7 @@ public class Monitor {
         this.monitorHistory = new ArrayList<MonitorHistory>();
         this.vms = Main.vmsProvisioned.size();
         this.quarantined = 0;
+        this.maxProvisionedVM = Main.vmsProvisioned.size();
     }
        
     public void doMonitoring(){
@@ -107,6 +110,10 @@ public class Monitor {
             // set response time avg
             responseTimeAvg = monitorHaproxy.getRespnseTimeAvg();
             
+            //set max provisioned vms
+            if (vms > maxProvisionedVM)
+                maxProvisionedVM = vms;
+            
             // write to history
             MonitorHistory monitorHistory = new MonitorHistory(cpuUtilizationAvg, 
                                                                 cpuUtilizationPerVm, 
@@ -121,7 +128,9 @@ public class Monitor {
                     + "\nResponseTime avg= " + responseTimeAvg
                     + "\nCurrentSessions sum= " + currentSessionSum
                     + "\nVms No.= " + vms 
-                    + "\nquarantineed Vms No.= " + quarantined);
+                    + "\nquarantineed Vms No.= " + quarantined
+                    + "\nMax Vms No.= " + maxProvisionedVM);
+            
         } catch (InterruptedException ex) {
             Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
         }

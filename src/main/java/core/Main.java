@@ -70,7 +70,8 @@ public class Main {
         int timeToRunScaler = DefaultSettings.SCALING_INTERVAL;
         while (!exit()){
             try {
-                Log.printLine1("\nMain", "main", "Sleeping monitoring ("
+                Log.printLine();
+                Log.printLine1("Main", "main", "Sleeping monitoring ("
                                 + DefaultSettings.MONITORING_INTERVAL /1000 + " sec)"
                                 + " Scaling (" + timeToRunScaler /1000 + " sec)"
                                 + " Run from (" + testStartTime + ")");
@@ -90,7 +91,8 @@ public class Main {
 //                if (timeToRunScaler > 0)
 //                    Log.printLine1("Main", "main", " Remained time to scaling: " + (timeToRunScaler / 1000) + " sec");
                 if (timeToRunScaler <= 0){
-                    Log.printLine2("\n\nMain", "main", "*******  Full autoscaling started...  *******");
+                    Log.printLine();Log.printLine();
+                    Log.printLine2("Main", "main", "*******  Full autoscaling started...  *******");
                     // call analyzer
                     analyzer.doAnalysis();
                     // call planner

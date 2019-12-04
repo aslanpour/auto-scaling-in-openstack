@@ -126,16 +126,12 @@ public class MonitorHaproxy implements Runnable{
             String sessions = backend[backendRowsIndex][indexCurrentSession];// cuurent sessions
 
             currentSessionsPerVm[backendRowsIndex] = new String[]{name, sessions};
-//            Log.printLine4("MonitorHaproxy", "parse", "Session No. name= " + name + " session= " + sessions);
         }
         
         //set total response time
         respnseTimeAvg = Double.valueOf(backendTotal[indexTotalTime]);
         // set sum current sessions
         currentSessionsSum = Integer.valueOf(backendTotal[indexCurrentSession]);
-        
-//        Log.printLine4("monitorHaproxy", "parse", "Average RT=" + respnseTimeAvg);
-//        Log.printLine4("monitorHaproxy", "parse", "Sum Current Sessions =" + currentSessionsSum);
     }
 
     public String[][] getCurrentSessionsPerVm() {

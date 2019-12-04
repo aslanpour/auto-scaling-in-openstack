@@ -5,6 +5,12 @@
  */
 package core;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import log.Log;
 
 /**
@@ -12,25 +18,29 @@ import log.Log;
  * @author aslanpour
  */
 public class Test {
-    public static void main(String[] args) {
-        double[] aaa = new double[4];
-        aaa[0] = 0;
-        aaa[1] =1;
-        aaa[2] = 2;
-        aaa[3] = 3;
-        
-        double[] bbb = new double[1];
-        bbb[0] = 5;
-        aaa = bbb.clone();
-        
-        int a =300000;
-        int b = 60000;
-        int c = a/b;
-        c =c;
-        System.out.println("tt\n\nt");
-        String testStartTime = Log.getTimeStr().substring(0, 5);
-        double currentLoad = Math.ceil(0 / 8);
-        c=c;
+    public static void main(String[] args) throws IOException {
+        Log.printLine();
+        System.out.println("core.Test.main()");
+        Log.printLine();
+        System.err.println("sdgsg");
+        try {
+            Process p = null;
+            System.out.println(Log.getTimestampStr());
+            // Get CPU idle percentage
+            p = Runtime.getRuntime().exec("sshpass -p " + DefaultSettings.WEB_SERVER_PASSWORD +
+                    " ssh -o " + "StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
+                    + DefaultSettings.WEB_SERVER_USERNAME + "@10.10.0.101" +
+                    " -i " + DefaultSettings.FILE_LOCATION_HAPROXY_PRIVATE_KEY
+                    + " sudo " + "tail -n " + DefaultSettings.CPU_LOG_ITEMS + " " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
+//                + " sudo bash " + DefaultSettings.FILE_LOCATION_CPU_UTILIZATION);
+//                p.waitFor(10, TimeUnit.DAYS)
+            p.waitFor(15000, TimeUnit.MILLISECONDS);
+            System.out.println(Log.getTimestampStr());
+            BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
    
 }

@@ -52,7 +52,8 @@ public class ExecutorSimple extends Executor{
     
     @Override
     public void doExecution(){
-        Log.printLine2("\nExecutorSimple", "doExecution", "Executor started . . .");
+        Log.printLine();
+        Log.printLine2("ExecutorSimple", "doExecution", "Executor started . . .");
         // executor needs to obtain these parameters
         setAction(DefaultSettings.Action.DO_NOTHING);
         setProvisioned(0);
@@ -291,7 +292,7 @@ public class ExecutorSimple extends Executor{
     @Override
     public String authentication(){
         try {
-            Log.printLine3("ExecutorSimple", "authentication", "Create a token for OpenStack authentication");
+//            Log.printLine3("ExecutorSimple", "authentication", "Create a token for OpenStack authentication");
             //Create Token
             HttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(DefaultSettings.OS_IDENTITY_API + "/auth/tokens?nocatalog");
@@ -328,7 +329,7 @@ public class ExecutorSimple extends Executor{
             httpPost.reset();
             
             // The authentication code is returned in the HTTP header
-            Log.printLine3("Token was created.");
+//            Log.printLine3("Token was created.");
             return tokenValue;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ExecutorSimple.class.getName()).log(Level.SEVERE, null, ex);
@@ -395,7 +396,7 @@ public class ExecutorSimple extends Executor{
             System.out.println("error-haproxyreconfiguration");
             e.printStackTrace();
         }
-        Log.printLine1("haproxy reconfiguration is done");
+//        Log.printLine1("haproxy reconfiguration is done");
     }
     
     /**
