@@ -58,7 +58,7 @@ public class DefaultSettings {
     public static int INITIAL_WEB_SERVERS = 2;// web servers to begin with
     //Monitoring
     public static int MONITORING_INTERVAL = 60 * 1000; //millisecond
-    public static int SCALING_INTERVAL = 300 * 1000;// millisecond
+    public static int SCALING_INTERVAL = 120 * 1000;// millisecond
     
     public static final String HAPROXY_API = "http://192.168.0.160/haproxy?stats;csv";
     //Analyzing
