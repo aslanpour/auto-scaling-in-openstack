@@ -80,7 +80,7 @@ public class Monitor {
             monitorHaproxyThread.join();
             
             /* monitoring is done */
-            Log.printLine2("Monitor", "doMonitoring", "Monitoring is done");
+//            Log.printLine2("Monitor", "doMonitoring", "Monitoring is done");
             // return calculated cpu for vms, index 0 is vm index and 1 is its cpu util.
             // vm index is used in surplus vm selection based on vm cpu utilization
             cpuUtilizationPerVm = monitorVms.getCpuUtilizationPerVm();

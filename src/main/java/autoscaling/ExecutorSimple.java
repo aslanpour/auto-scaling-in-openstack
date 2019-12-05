@@ -53,7 +53,7 @@ public class ExecutorSimple extends Executor{
     @Override
     public void doExecution(){
         Log.printLine();
-        Log.printLine2("ExecutorSimple", "doExecution", "Executor started . . .");
+//        Log.printLine2("ExecutorSimple", "doExecution", "Executor started . . .");
         // executor needs to obtain these parameters
         setAction(DefaultSettings.Action.DO_NOTHING);
         setProvisioned(0);
@@ -348,7 +348,7 @@ public class ExecutorSimple extends Executor{
                                             final String serverName, 
                                             final String serverIP) {
         try {
-            Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "HAProxy reconfiguration started . . .");
+//            Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", "HAProxy reconfiguration started . . .");
             //Script Inputs: COMMAND {ADD or REMOVE}, SERVER_NAME, SERVER_IP
             ////sudo bash /home/ubuntu/haproxy_reconfiguration.sh PARA1 PARA2 PARA3
             String command[]= {"sudo", 
@@ -380,7 +380,7 @@ public class ExecutorSimple extends Executor{
                 
                 int exitVal = p.waitFor();
                 if (exitVal == 0) {
-                        Log.printLine3("ExecutorSimple", "haproxyReconfigurationLocally", 
+                        Log.printLine3("ExecutorSimple", "haproxyReconfiguration", 
                                 "Haproxy " + addRemove + "ed" + " " + serverName + " " + serverIP);
 //                        System.out.println(output);
 //                        System.exit(0);
