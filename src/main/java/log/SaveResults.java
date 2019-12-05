@@ -87,6 +87,11 @@ public class SaveResults {
             sumCost += vm.getBill();
         }
         Log.printLine3("Sum Cost: " + sumCost + " $");
+        
+        // count all requests (GET, 200, 400, 404, 500, 503)??????????
+        // from wikijector server
+        // ssh to wikijector and run grep -o 'GET' path/mylog.log | wc -l
+        // ip and file name from DefaultSettings
     }
     
     public static void saveMonitorHistory(ArrayList<MonitorHistory> historyList, String filePath){
