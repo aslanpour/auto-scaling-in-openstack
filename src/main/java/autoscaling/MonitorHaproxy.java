@@ -32,7 +32,7 @@ public class MonitorHaproxy implements Runnable{
     private double respnseTimeAvg;
     
     public void run (){
-        Log.printLine3("MonitorHaproxy", "run", "Monitor Haproxy is active...");
+        Log.printLine3("Monitor Haproxy is active...");
         try {
             currentSessionsPerVm = new String[Main.vmsProvisioned.size()][2];
             currentSessionsSum = 0;
