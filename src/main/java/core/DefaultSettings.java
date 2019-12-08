@@ -110,14 +110,14 @@ public class DefaultSettings {
     }
     //Executor
     public static final SurplusVMSelectionPolicy surplusVMSelectionPolicy = 
-                                                SurplusVMSelectionPolicy.THE_OLDEST; 
+                                        SurplusVMSelectionPolicy.RESOURCE_AWARE; 
     public enum SurplusVMSelectionPolicy{
         /* when performing scale down decisions, it is neccessary to choose a policy for selecting surplus VM
             Implemented policies are:*/
         RANDOM, // selects the VM randomly
         THE_OLDEST, // selects the oldest VM (like Amazon default policy)
         THE_YOUNGEST, // selects the youngest VM 
-        RESOURCE_AWARE,
+        RESOURCE_AWARE, 
         LOAD_AWARE, // selects the VM which has the lowest load
         COST_AWARE, // selects the the most cost-efficient VM 
     }
@@ -146,5 +146,5 @@ public class DefaultSettings {
         SCALE_DOWN_BANNED_BY_MIN_ALLOWED_VM
     }
     
-    public static final int TEST_TERMINATION_COUNTER = 5;
+    public static final int TEST_TERMINATION_COUNTER = 3;
 }
