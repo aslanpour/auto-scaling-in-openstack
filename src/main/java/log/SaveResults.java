@@ -87,7 +87,9 @@ public class SaveResults {
             sumCost += vm.getBill();
         }
         Log.printLine3("Sum Cost: " + sumCost + " $");
-        
+        Log.printLine1("vms No. in vmsDeprovisioned are " + Main.vmsDeprovisioned.size());
+        if (Main.vmsProvisioned.size() > 0)
+            Log.printLine1("Error Error----vmsProvisioned has items");
         // count all requests (GET, 200, 400, 404, 500, 503)??????????
         // from wikijector server
         // ssh to wikijector and run grep -o 'GET' path/mylog.log | wc -l

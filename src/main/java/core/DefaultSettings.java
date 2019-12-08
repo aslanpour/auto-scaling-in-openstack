@@ -110,7 +110,7 @@ public class DefaultSettings {
     }
     //Executor
     public static final SurplusVMSelectionPolicy surplusVMSelectionPolicy = 
-                                                SurplusVMSelectionPolicy.THE_OLDEST; //?????
+                                                SurplusVMSelectionPolicy.THE_OLDEST; 
     public enum SurplusVMSelectionPolicy{
         /* when performing scale down decisions, it is neccessary to choose a policy for selecting surplus VM
             Implemented policies are:*/

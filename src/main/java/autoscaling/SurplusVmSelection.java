@@ -17,6 +17,7 @@ import core.Vm;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import log.Log;
 import log.MonitorHistory;
 /**
  * SurplusVmSelectionPolioy class is called if the executor wants to execute an scale-down decision.
@@ -33,10 +34,13 @@ public class SurplusVmSelection {
         switch(policy){
             case RANDOM: selectedVm = random(candidateVms);
             break;
+            
             case THE_OLDEST: selectedVm = theOldest(candidateVms);
             break;
+            
             case THE_YOUNGEST: selectedVm = theYoungest(candidateVms);
             break;
+            
             case RESOURCE_AWARE:
                 double[][] cpuUtilPerVm = history.getCpuUtilizationPerVm();
                 selectedVm = resourceAware(candidateVms, cpuUtilPerVm);
@@ -46,12 +50,9 @@ public class SurplusVmSelection {
                 int[][] sessionsPerVm = history.getSessions();
                 selectedVm = loadAware(candidateVms, sessionsPerVm);
             break;
-//            case CLOUDLET_AWARE: selectedVm = cloudletsAware(candidateVms);
-//            break;
-//            case LOAD_AWARE: selectedVm = loadAware(candidateVms);
-//            break;
-//            case COST_AWARE_SIMPLE: selectedVm = costAwareSimple(candidateVms);
-//            break;
+            
+            case COST_AWARE: selectedVm = costAware(candidateVms);
+            break;
 //            case COST_AWARE_PROFESSIONAL: selectedVm = costAwareProfessional(candidateVms);
 //            break;
             default:
@@ -86,6 +87,7 @@ public class SurplusVmSelection {
             if(vm.getTimeCreated().before(selectedvm.getTimeCreated())){
                 selectedvm = vm;
             }
+            
         }
         return selectedvm;
     }
@@ -113,12 +115,14 @@ public class SurplusVmSelection {
                 vmIndex = (int)cpuUtilPerVm[i][0];
                 cpuMin = cpuUtilPerVm[i][1];
             }
+            Log.printLine1("vmIndex= " + cpuUtilPerVm[i][0] + " cpuUtil= " + cpuUtilPerVm[i][1]) ;
         }
         
         // select the vm by its selected index
         for (Vm vm : candidateVms){
             if (vm.getIndex() == vmIndex){
                 selectedVm = vm;
+                Log.printLine1("selected vmIndex = " + vm.getIndex());
                 break;
             }
         }
@@ -137,12 +141,14 @@ public class SurplusVmSelection {
                 vmIndex = sessionsPerVm[i][0];
                 sessionsMin = sessionsPerVm[i][1];
             }
+            Log.printLine1("vmIndex= " + sessionsPerVm[i][0] + " sessions= " + sessionsPerVm[i][1]);
         }
         
         // select the vm by its selected index
         for (Vm vm : candidateVms){
             if (vm.getIndex() == vmIndex){
                 selectedVm = vm;
+                Log.printLine1("selected vmIndex= " + vm.getIndex());
                 break;
             }
         }
@@ -150,66 +156,33 @@ public class SurplusVmSelection {
         return selectedVm;
     }
     
-//    /**
-//     * Chooses Vm by minimum running cloudlet, to reduce cloudlet cancellation criteria
-//     * @param vmList
-//     * @param vmsCount
-//     * @return 
-//     */
-//    private static Vm cloudletsAware(List<Vm> condidateVmList, ArrayList<Integer> exceptList){
-//        Vm selectedVm = condidateVmList.get(0);
-//        double minRunningCloudlets = Integer.MAX_VALUE;
-//
-//        for(int i = 0; i < condidateVmList.size(); i++){
-//            Vm vm = condidateVmList.get(i);
-//            double runningCloudlets = vm.getCloudletScheduler().runningCloudlets();
-//
-//            if(runningCloudlets < minRunningCloudlets && !exceptList.contains(vm.getId())){
-//                minRunningCloudlets = runningCloudlets;
-//                selectedVm = vm;
-//            }
-//        }
-//        return selectedVm;
-//    }
-//      
-//   
-//    /**
-//     * Chooses a vm with minimum remained load
-//     * @param vmList
-//     * @return 
-//     */
-//    private static Vm loadAware(List<Vm> condidateVmList, ArrayList<Integer> exceptList){
-//        Vm selectedVm = condidateVmList.get(0);
-//        double minLoad = Integer.MAX_VALUE;
-//
-//        for(int i = 0; i < condidateVmList.size(); i++){
-//            Vm vm = condidateVmList.get(i);
-//
-//                double vmRemainedLoad = 0;
-//                for(ResCloudlet resCloudlet :((CloudletSchedulerTimeShared)vm.getCloudletScheduler()).getCloudletExecList()){
-//                    Cloudlet cloudlet = resCloudlet.getCloudlet();
-//                    double length = cloudlet.getCloudletLength() * cloudlet.getNumberOfPes();
-//                    double ranTime = (CloudSim.clock() - cloudlet.getSubmissionTime());
-//                    double cloudletRemainedLength;
-//                    cloudletRemainedLength = length - (ranTime * (vm.getMips() * vm.getNumberOfPes()));
-//                    /* A Vm by 2 core can not execute a cloudlet by 1 core, sooner than running by 1 core */
-//                    //If a cloudlet by 1 core is running in a vm by 2 core, so ran time calculates just by cloudlet cores
-//                    if(vm.getNumberOfPes() > cloudlet.getNumberOfPes()){
-//                        cloudletRemainedLength = length - (ranTime * (vm.getMips() * cloudlet.getNumberOfPes()));
-//                    }
-//                    
-//                    vmRemainedLoad += cloudletRemainedLength;
-//                }
-//                
-//                if(vmRemainedLoad < minLoad && !exceptList.contains(vm.getId())){
-//                    minLoad = vmRemainedLoad;
-//                    selectedVm = vm;
-//                }
-//        }
-//        return selectedVm;
-//    }
-//        
-//    
+    private static Vm costAware (ArrayList<Vm> candidateVms){
+        Vm selectedVm = candidateVms.get(0);
+        
+        double remainedTimeToFulfillBill = Integer.MAX_VALUE;
+
+        for (Vm vm : candidateVms){
+            // created time
+            long dateStart = vm.getTimeCreated().getTime();
+            //now
+            long dateEnd = Log.getTimestamp().getTime();
+            
+            long duration = dateEnd - dateStart;
+
+            double seconds = duration / 1000;
+            double remainedTime = seconds % 3600;
+            
+            if (remainedTime < remainedTimeToFulfillBill){
+                selectedVm = vm;
+                remainedTimeToFulfillBill = remainedTime;
+            }
+            Log.printLine1("IP= " + vm.getPrivateIP() + " remained time = " + remainedTime);
+        }
+        
+        Log.printLine1("selected Vm = " + selectedVm.getPrivateIP());
+        return selectedVm;
+    }
+
 //    
 //    /**
 //     * Selects the surplus VM in a cost-saving way

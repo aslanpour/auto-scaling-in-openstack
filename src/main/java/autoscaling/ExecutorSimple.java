@@ -261,7 +261,7 @@ public class ExecutorSimple extends Executor{
                 // remove from vmsProvisioned
                 Vm tmpVm = vm;
                 Main.vmsProvisioned.remove(vm);
-                //release th ip
+                //release the ip
                 allocatedIPs.remove(Integer.valueOf((vm.getPrivateIP().replace(".", "-")).split("-")[3]));
                 //add to vmsDeprovisioned
                 tmpVm.setStatus("Destroyed");
