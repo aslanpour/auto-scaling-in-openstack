@@ -133,7 +133,7 @@ public class Main {
      * @return 
      */
     private static boolean exit (){
-        if (monitor.getCurrentSessionSum() == 0)//????current sessions
+        if (monitor.getCurrentSessionSum() == 0)
             terminationCounter++;
         else
             terminationCounter = 0;

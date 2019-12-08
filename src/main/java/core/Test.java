@@ -23,7 +23,7 @@ import log.ReadWriteCSV;
 public class Test {
     public static void main(String[] args) throws IOException {
         String path="src/main/java/core/";
-        String name= "test.csv";
+        String name= "test.txt";
         ArrayList array = ReadWriteCSV.readCSV(path, name, false);
         double[] items = ReadWriteCSV.pickAnItemList(array, 0);
         DescriptiveStatistics.analyze(items, "rt");

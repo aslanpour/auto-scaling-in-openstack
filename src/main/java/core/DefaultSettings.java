@@ -84,6 +84,7 @@ public class DefaultSettings {
         SLA_AWARE, //      SLA aware - Decision making by delay time rule
         HYBRID, //        Resource-and-SLA aware - Decision making by both resource utilization and delay time rules
         LOAD_AWARE,
+        LOAD_RESOURCE_AWARE,
         
         /* please cite: https://www.sciencedirect.com/science/article/pii/S1389128612003763 */
         UT_1Al, //    'Util.-based One Alaram'- Decision-making by resources utilization
@@ -116,10 +117,9 @@ public class DefaultSettings {
         RANDOM, // selects the VM randomly
         THE_OLDEST, // selects the oldest VM (like Amazon default policy)
         THE_YOUNGEST, // selects the youngest VM 
-        CLOUDLET_AWARE, // selects the VM which has the lowest running cloudlet
+        RESOURCE_AWARE,
         LOAD_AWARE, // selects the VM which has the lowest load
-        COST_AWARE_SIMPLE, // selects the the most cost-efficient VM 
-        COST_AWARE_PROFESSIONAL; // selects the most cost-and-load-efficient VM
+        COST_AWARE, // selects the the most cost-efficient VM 
     }
     public static boolean COOLDOWN_ENABLED = false;
     public static int COOLDOWN = 0;

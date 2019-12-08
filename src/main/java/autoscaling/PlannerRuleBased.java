@@ -66,6 +66,7 @@ public class PlannerRuleBased extends Planner{
             case SLA_AWARE  : rule_SLAAware(analyzedResponseTime); break;
             case HYBRID : rule_HYBRID(analyzedCpuUtilization, analyzedResponseTime); break;
             case LOAD_AWARE : rule_LoadAware(analyzedRequests, vms); break;
+            case LOAD_RESOURCE_AWARE : rule_LoadResourceAware(analyzedRequests, analyzedCpuUtilization, vms);break;
             case UT_1Al : rule_UT_1Al(analyzedCpuUtilization); break;
             case UT_2Al : rule_UT_2Al(analyzedCpuUtilization); break;
             case LAT_1Al : rule_LAT_1Al(analyzedCpuUtilization, analyzedResponseTime); break;
@@ -123,6 +124,18 @@ public class PlannerRuleBased extends Planner{
             setDecision(DefaultSettings.PlannerDecision.SCALE_UP);
         else if (currentLoadPerVm < requestsDownThreshold)
             setDecision(DefaultSettings.PlannerDecision.SCALE_DOWN);
+    }
+    
+    
+    private void rule_LoadResourceAware(double requests, double cpuUtil, int vms){
+        double currentLoadPerVm = Math.ceil(requests / vms);
+        
+        if (currentLoadPerVm > requestsUpThreshold)
+            if (cpuUtil > cpuScaleUpThreshold)
+                setDecision(DefaultSettings.PlannerDecision.SCALE_UP);
+        else if (currentLoadPerVm < requestsDownThreshold)
+            if (cpuUtil < cpuScaleDownThreshold)
+                setDecision(DefaultSettings.PlannerDecision.SCALE_DOWN);
     }
     
     /**

@@ -136,7 +136,7 @@ public class Monitor {
         }
     }
     
-    public void loadBalancingChecker(){
+    public void loadBalancingOptimizer(){
         // after measurements, check if the load is equally balanced between vms. ?????
     }
     

@@ -12,10 +12,12 @@
 package autoscaling;
 
 import core.DefaultSettings;
+import core.Main;
 import core.Vm;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import log.MonitorHistory;
 /**
  * SurplusVmSelectionPolioy class is called if the executor wants to execute an scale-down decision.
  * In this situation, this class selects a VM as surplus. There are some policies here.
@@ -26,12 +28,23 @@ public class SurplusVmSelection {
     public static Vm policy(DefaultSettings.SurplusVMSelectionPolicy policy, ArrayList<Vm> candidateVms){
         Vm selectedVm = null;
         
+        MonitorHistory history = Main.getMonitor().latestHistory();
+        
         switch(policy){
             case RANDOM: selectedVm = random(candidateVms);
             break;
             case THE_OLDEST: selectedVm = theOldest(candidateVms);
             break;
             case THE_YOUNGEST: selectedVm = theYoungest(candidateVms);
+            break;
+            case RESOURCE_AWARE:
+                double[][] cpuUtilPerVm = history.getCpuUtilizationPerVm();
+                selectedVm = resourceAware(candidateVms, cpuUtilPerVm);
+            break;
+            
+            case LOAD_AWARE:
+                int[][] sessionsPerVm = history.getSessions();
+                selectedVm = loadAware(candidateVms, sessionsPerVm);
             break;
 //            case CLOUDLET_AWARE: selectedVm = cloudletsAware(candidateVms);
 //            break;
@@ -88,7 +101,54 @@ public class SurplusVmSelection {
         return selectedvm;
     }
     
+    private static Vm resourceAware (ArrayList<Vm> candidateVms, double[][] cpuUtilPerVm){
+        Vm selectedVm = candidateVms.get(0);
+        
+        // search the Vm by CPU utilization
+        int vmIndex = -1;
+        double cpuMin = Double.MAX_VALUE;
+        
+        for (int i=0; i< cpuUtilPerVm.length; i++){
+            if (cpuUtilPerVm[i][1] < cpuMin){
+                vmIndex = (int)cpuUtilPerVm[i][0];
+                cpuMin = cpuUtilPerVm[i][1];
+            }
+        }
+        
+        // select the vm by its selected index
+        for (Vm vm : candidateVms){
+            if (vm.getIndex() == vmIndex){
+                selectedVm = vm;
+                break;
+            }
+        }
+        
+        return selectedVm;
+    }
     
+    private static Vm loadAware (ArrayList<Vm> candidateVms, int[][] sessionsPerVm){
+        Vm selectedVm = candidateVms.get(0);
+        
+        int vmIndex = -1;
+        int sessionsMin = Integer.MAX_VALUE;
+        
+        for (int i =0; i < sessionsPerVm.length; i++){
+            if(sessionsPerVm[i][1] < sessionsMin){
+                vmIndex = sessionsPerVm[i][0];
+                sessionsMin = sessionsPerVm[i][1];
+            }
+        }
+        
+        // select the vm by its selected index
+        for (Vm vm : candidateVms){
+            if (vm.getIndex() == vmIndex){
+                selectedVm = vm;
+                break;
+            }
+        }
+        
+        return selectedVm;
+    }
     
 //    /**
 //     * Chooses Vm by minimum running cloudlet, to reduce cloudlet cancellation criteria
