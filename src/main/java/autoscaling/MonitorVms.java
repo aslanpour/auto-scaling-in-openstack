@@ -110,6 +110,7 @@ public class MonitorVms implements Runnable{
                     output += line + "\n";
                 }
                 if (counter> Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)) // remove > and check time out for when the vm is not ready yet (see if java waits for the timeout or runs)?????
+                                                                                // add -o ConnectTimeout=10
                     System.out.println("ERROR - getCpuUtilization returned more than one output");
                 else if (counter < Integer.valueOf(DefaultSettings.CPU_LOG_ITEMS)){
                     double[] cpuIdleListTmp = new double[counter];
