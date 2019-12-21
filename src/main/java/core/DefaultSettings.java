@@ -43,8 +43,8 @@ public class DefaultSettings {
         //flavor ID, flavor name, VCPUs, RAM, DISK, and price per hour
         {"2", "m1.small", "1", "2", "20", "0.02", "81edade3-9325-4ca1-9d2d-03cb077858b8"},
         {"3", "m1.medium", "2", "4", "40", "0.04", "739ab0a2-ad02-4d54-8cd9-d5ecedce513f"},
-        {"4", "m1.large", "4", "8", "90", "0.06", "739ab0a2-ad02-4d54-8cd9-d5ecedce513f"},
-        {"5", "m1.xlarge", "8", "16", "160", "0.08", "739ab0a2-ad02-4d54-8cd9-d5ecedce513f"}
+        {"4", "m1.large", "4", "8", "90", "0.8", "739ab0a2-ad02-4d54-8cd9-d5ecedce513f"},
+        {"5", "m1.xlarge", "8", "16", "160", "0.16", "739ab0a2-ad02-4d54-8cd9-d5ecedce513f"}
     };
     
     // the ID of web server snapshot
