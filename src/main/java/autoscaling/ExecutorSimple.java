@@ -304,7 +304,7 @@ public class ExecutorSimple extends Executor{
             
             String json = "{ \"auth\": { \"identity\": { \"methods\": [ \"password\" ], \"password\": "
                     + "{ \"user\": { \"domain\": { \"name\": \"Default\" }, \"name\": \"mohammad\", "
-                    + "\"password\": \"GreenCloud\" } } }, \"scope\": { \"project\": "
+                    + "\"password\": \"****\" } } }, \"scope\": { \"project\": "
                     + "{ \"domain\": { \"name\": \"Default\" }, \"name\": \"Auto-scaling\" }}}}";
             
             StringEntity entity = new StringEntity(json);
